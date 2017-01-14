@@ -9,6 +9,7 @@ import com.bowlingx.webpack.{WebpackEntry, WebpackManifest}
 import play.api.{Configuration, Environment, Logger}
 import play.api.inject.{Binding, Module}
 import play.api.libs.json._
+import javax.inject.Singleton
 
 class ReactModule extends Module {
 
@@ -65,14 +66,14 @@ class ReactModule extends Module {
           new ScriptActionProvider(
             ScriptResources(this.createVendorResources(environment, Some(entry._2), prependedBundles))
           )
-        )
+        ).in(classOf[Singleton])
       }).toSeq
     }).getOrElse(Seq.empty)
 
     // default engine that just contains the prepended entries
     engines :+ bind(classOf[ScriptActionBuilder]).to(
       new ScriptActionProvider(ScriptResources(this.createVendorResources(environment, None, prependedBundles)))
-    )
+    ).in(classOf[Singleton])
   }
 
   def createVendorResources(
