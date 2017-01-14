@@ -41,7 +41,7 @@ class ReactModule extends Module {
     val engines = this.createEngines(environment, publicToServerEntry, prependedBundles)
 
     val webpackManifestBinding = Seq(manifestOption.map { manifest =>
-      bind(classOf[WebpackManifest]).to(manifest)
+      bind(classOf[WebpackManifest]).to(manifest).in(classOf[Singleton])
     }).flatten
 
     engines ++ webpackManifestBinding
