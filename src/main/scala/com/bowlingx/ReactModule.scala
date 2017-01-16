@@ -24,11 +24,13 @@ class ReactModule extends Module {
       logger.error(
         "Could not find webpack JSON manifest file, make sure to define webpack.manifestFile to an existing path."
       )
-
     }
-    val manifestOption = Try(
-      environment.classLoader.loadClass("com.bowlingx.webpack.WebpackManifest").asInstanceOf[WebpackManifestType]
-    ).toOption
+
+    val manifestOption = Try {
+      val cons = environment.classLoader.loadClass("com.bowlingx.webpack.WebpackManifest$").getDeclaredConstructors
+      cons(0).setAccessible(true)
+      cons(0).newInstance().asInstanceOf[WebpackManifestType]
+    }.toOption
 
     val publicToServerEntry = this.mapServerPath(configuration, manifestOption)
 
