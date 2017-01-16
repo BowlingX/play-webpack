@@ -11,6 +11,7 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1
 
 lazy val lib = Project("play-webpack-lib", file("src") / "lib")
 
-lazy val sbtPlugin = Project("play-webpack-plugin", file("src") / "sbt-plugin").settings(pluginSettings:_*).dependsOn(lib).aggregate(lib)
+lazy val sbtPlugin = Project("play-webpack-plugin", file("src") / "sbt-plugin")
+  .settings(pluginSettings:_*).dependsOn(lib).aggregate(lib)
 
 lazy val playWebpack = Project("play-webpack", file(".")).dependsOn(lib).aggregate(lib)
