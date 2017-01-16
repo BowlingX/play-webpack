@@ -17,20 +17,17 @@ class ReactModule extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
     val logger = Logger(this.getClass)
 
-    // read manifest file and preload resources
-    val manifest = configuration.getString("webpack.manifestFile").flatMap(environment.resourceAsStream)
-
-    if (manifest.isEmpty) {
-      logger.error(
-        "Could not find webpack JSON manifest file, make sure to define webpack.manifestFile to an existing path."
-      )
-    }
-
     val manifestOption = Try {
       val cons = environment.classLoader.loadClass("com.bowlingx.webpack.WebpackManifest$").getDeclaredConstructors
       cons(0).setAccessible(true)
       cons(0).newInstance().asInstanceOf[WebpackManifestType]
     }.toOption
+
+    if (manifestOption.isEmpty) {
+      logger.warn(
+        "Could not find webpack manifest class, make sure you setup the `play-react-plugin` correctly."
+      )
+    }
 
     val publicToServerEntry = this.mapServerPath(configuration, manifestOption)
 
