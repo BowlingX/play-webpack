@@ -9,6 +9,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/project" />
+            <option value="$PROJECT_DIR$/src/lib" />
+            <option value="$PROJECT_DIR$/src/lib/project" />
+            <option value="$PROJECT_DIR$/src/sbt-plugin" />
+            <option value="$PROJECT_DIR$/src/sbt-plugin/project" />
           </set>
         </option>
         <option name="resolveSbtClassifiers" value="true" />

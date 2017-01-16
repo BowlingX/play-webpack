@@ -1,4 +1,6 @@
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.10")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % meta.Dependencies.playVersion)
 
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0")
+libraryDependencies ++= Seq(
+  "org.scala-sbt" % "scripted-plugin" % sbtVersion.value
+)

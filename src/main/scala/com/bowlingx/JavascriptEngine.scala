@@ -55,7 +55,7 @@ class JavascriptEngine(
     this.initScheduling()
   }
 
-  private[this] def initScheduling() {
+  private[this] def initScheduling() : Unit = {
     val watch = FileSystems.getDefault.newWatchService()
 
     val uniqueFolders = vendorFiles.resources.map(r => Paths.get(r.toURI).getParent).distinct

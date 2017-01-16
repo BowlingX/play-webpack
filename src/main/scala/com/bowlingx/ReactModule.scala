@@ -5,11 +5,12 @@ import java.nio.file.Paths
 
 import com.bowlingx.playframework.ScriptActionBuilder
 import com.bowlingx.providers.{ScriptActionProvider, ScriptResources}
-import com.bowlingx.webpack.{WebpackEntry, WebpackManifest}
+import com.bowlingx.webpack._
 import play.api.{Configuration, Environment, Logger}
 import play.api.inject.{Binding, Module}
-import play.api.libs.json._
 import javax.inject.Singleton
+
+import scala.util.Try
 
 class ReactModule extends Module {
 
@@ -25,10 +26,9 @@ class ReactModule extends Module {
       )
 
     }
-    val manifestOption = manifest.flatMap { file =>
-      implicit val entry = Json.reads[WebpackEntry]
-      Json.fromJson[Map[String, WebpackEntry]](Json.parse(file)).asOpt.map(WebpackManifest)
-    }
+    val manifestOption = Try(
+      environment.classLoader.loadClass("com.bowlingx.webpack.WebpackManifest").asInstanceOf[WebpackManifestType]
+    ).toOption
 
     val publicToServerEntry = this.mapServerPath(configuration, manifestOption)
 
@@ -41,7 +41,7 @@ class ReactModule extends Module {
     val engines = this.createEngines(environment, publicToServerEntry, prependedBundles)
 
     val webpackManifestBinding = Seq(manifestOption.map { manifest =>
-      bind(classOf[WebpackManifest]).to(manifest).in(classOf[Singleton])
+      bind(classOf[WebpackManifestType]).to(manifest).in(classOf[Singleton])
     }).flatten
 
     engines ++ webpackManifestBinding
@@ -57,8 +57,8 @@ class ReactModule extends Module {
     */
   def createEngines(
                      environment: Environment,
-                     publicToServerEntry: Option[WebpackManifest],
-                     prependedBundles: Seq[(String, WebpackEntry)]
+                     publicToServerEntry: Option[WebpackManifestType],
+                     prependedBundles: Seq[(String, WebpackEntryType)]
                    ): Seq[Binding[ScriptActionBuilder]] = {
     val engines = publicToServerEntry.map(manifest => {
       manifest.entries.filter(e => !prependedBundles.contains(e)).map(entry => {
@@ -78,8 +78,8 @@ class ReactModule extends Module {
 
   def createVendorResources(
                              environment: Environment,
-                             entry: Option[WebpackEntry],
-                             prepends: Seq[(String, WebpackEntry)]
+                             entry: Option[WebpackEntryType],
+                             prepends: Seq[(String, WebpackEntryType)]
                            ): Seq[URL] = {
     // we watch the real source in develop, this is faster instead of waiting till other watch processes copy the file to resources
     val preSources = prepends.flatMap(_._2.js.map(
@@ -106,11 +106,11 @@ class ReactModule extends Module {
     * @param manifest      original manifest
     * @return
     */
-  def mapServerPath(configuration: Configuration, manifest: Option[WebpackManifest]): Option[WebpackManifest] = {
+  def mapServerPath(configuration: Configuration, manifest: Option[WebpackManifestType]): Option[WebpackManifestType] = {
     manifest.map { manifest =>
       val publicPathOption = configuration.getString("webpack.publicPath")
       val serverPathOption = configuration.getString("webpack.serverPath")
-      WebpackManifest((publicPathOption, serverPathOption) match {
+      WebpackManifestContainer((publicPathOption, serverPathOption) match {
         case (Some(publicPath), Some(serverPath)) =>
           manifest.entries.mapValues { case (entry: WebpackEntry) =>
             val jsEntries = entry.js.map(path => Paths.get(serverPath, replacePublicPath(path, publicPath)).toString)
