@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-react-lib.iml" filepath="$PROJECT_DIR$/.idea/modules/play-react-lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-react-lib-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-react-lib-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-lib.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-lib-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-lib-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-plugin-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-plugin-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/root.iml" filepath="$PROJECT_DIR$/.idea/modules/root.iml" />

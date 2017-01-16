@@ -2,7 +2,7 @@ import PlayWebpackBuild._
 
 commonSettings
 
-name := "play-react"
+name := "play-webpack"
 
 scalaSource in Compile := baseDirectory.value / "src" / "main" / "scala"
 
@@ -13,4 +13,4 @@ lazy val lib = Project("play-webpack-lib", file("src") / "lib")
 
 lazy val sbtPlugin = Project("play-webpack-plugin", file("src") / "sbt-plugin").settings(pluginSettings:_*).dependsOn(lib).aggregate(lib)
 
-lazy val root = (project in file(".")).dependsOn(lib).aggregate(lib)
+lazy val playWebpack = Project("play-webpack", file(".")).dependsOn(lib).aggregate(lib)

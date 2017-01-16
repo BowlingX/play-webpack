@@ -19,6 +19,6 @@
     <profile name="SBT 2" modules="sbt-plugin,play-sbt-plugin,play-webpack-plugin">
       <option name="deprecationWarnings" value="true" />
     </profile>
-    <profile name="SBT 3" modules="play-react-lib" />
+    <profile name="SBT 3" modules="play-react-lib,play-webpack-lib" />
   </component>
 </project>
