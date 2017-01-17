@@ -7,3 +7,10 @@ machine:
 dependencies:
   override:
     - cat /dev/null | sbt +test:compile
+
+test:
+  override:
+    - cat /dev/null | sbt +test
+  post:
+      - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+      - find . -type f -regex "./test_out/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
