@@ -1,7 +1,7 @@
 play-webpack
 ------------
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ca293d1006d4416a9aeb76bf323db6e)](https://www.codacy.com/app/billing/play-webpack?utm_source=github.com&utm_medium=referral&utm_content=BowlingX/play-webpack&utm_campaign=badger)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ca293d1006d4416a9aeb76bf323db6e)](https://www.codacy.com/app/bowlingx/play-webpack?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BowlingX/play-webpack&amp;utm_campaign=Badge_Grade)
 [![CircleCI](https://circleci.com/gh/BowlingX/play-webpack.svg?style=svg)](https://circleci.com/gh/BowlingX/play-webpack)
 
 This play module will add support for `webpack` and server-side rendering of javascript 
