@@ -32,8 +32,8 @@ class ReactModule extends Module {
     val publicToServerEntry = this.mapServerPath(configuration, manifestOption)
 
     val prependedBundles = configuration.getStringList("webpack.prependBundles").map(list =>
-      publicToServerEntry.map(entry => entry.entries.filter(
-        r => list.contains(r._1)).toSeq.sortBy(r => list.indexOf(r._1))
+      publicToServerEntry.map(entry => entry.entries.filter { case (index, _) =>
+       list.contains(index)}.toSeq.sortBy { case(index, _) => list.indexOf(index) }
       ).getOrElse(Seq.empty)
     ).getOrElse(Seq.empty)
 
@@ -60,13 +60,13 @@ class ReactModule extends Module {
                      prependedBundles: Seq[(String, WebpackEntryType)]
                    ): Seq[Binding[ScriptActionBuilder]] = {
     val engines = publicToServerEntry.map(manifest => {
-      manifest.entries.filter(e => !prependedBundles.contains(e)).map(entry => {
-        bind(classOf[ScriptActionBuilder]).qualifiedWith(entry._1).to(
+      manifest.entries.filter(e => !prependedBundles.contains(e)).map { case (index, entry) =>
+        bind(classOf[ScriptActionBuilder]).qualifiedWith(index).to(
           new ScriptActionProvider(
-            ScriptResources(this.createVendorResources(environment, Some(entry._2), prependedBundles))
+            ScriptResources(this.createVendorResources(environment, Some(entry), prependedBundles))
           )
         ).in(classOf[Singleton])
-      }).toSeq
+      }.toSeq
     }).getOrElse(Seq.empty)
 
     // default engine that just contains the prepended entries
@@ -81,9 +81,10 @@ class ReactModule extends Module {
                              prepends: Seq[(String, WebpackEntryType)]
                            ): Seq[URL] = {
     // we watch the real source in develop, this is faster instead of waiting till other watch processes copy the file to resources
-    val preSources = prepends.flatMap(_._2.js.map(
-      r => this.getFileFromResourcesOrProjectPath(environment, r))
-    ).flatten
+    val preSources = prepends.flatMap { case (_, sourceEntry) =>
+      sourceEntry.js.map(
+        r => this.getFileFromResourcesOrProjectPath(environment, r))
+    }.flatten
     val entrySource = Seq(entry.flatMap(_.js.flatMap(
       r => this.getFileFromResourcesOrProjectPath(environment, r)))
     ).flatten
