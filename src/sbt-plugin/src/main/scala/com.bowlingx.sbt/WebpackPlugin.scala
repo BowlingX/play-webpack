@@ -1,9 +1,8 @@
 package com.bowlingx.sbt
 
-import sbt._
-import Keys._
 import sbt.plugins.JvmPlugin
-import sbt.{AutoPlugin, Configuration, Def, File, SettingKey}
+import sbt.{AutoPlugin, Configuration, Def, File, SettingKey, _}
+import Keys._
 
 object WebpackPlugin extends AutoPlugin {
 
