@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="SBT 1" modules="play-webpack,root">
+    <profile name="SBT 1" modules="root">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <parameters>
@@ -16,9 +16,32 @@
         <parameter value="-Ywarn-unused" />
       </parameters>
     </profile>
-    <profile name="SBT 2" modules="sbt-plugin,play-sbt-plugin,play-webpack-plugin">
+    <profile name="SBT 2" modules="sbt-plugin,play-sbt-plugin">
       <option name="deprecationWarnings" value="true" />
     </profile>
-    <profile name="SBT 3" modules="play-react-lib,play-webpack-lib" />
+    <profile name="SBT 3" modules="play-react-lib" />
+    <profile name="SBT 5" modules="play-webpack">
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+        <parameter value="-target:jvm-1.8" />
+        <parameter value="-Xfuture" />
+        <parameter value="-Yno-adapted-args" />
+        <parameter value="-Ywarn-dead-code" />
+        <parameter value="-Ywarn-numeric-widen" />
+        <parameter value="-Ywarn-value-discard" />
+        <parameter value="-Ywarn-unused" />
+      </parameters>
+    </profile>
+    <profile name="SBT 6" modules="play-webpack-lib,play-webpack-plugin">
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+      </parameters>
+    </profile>
   </component>
 </project>

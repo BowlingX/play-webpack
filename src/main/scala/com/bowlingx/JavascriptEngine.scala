@@ -8,7 +8,7 @@ import javax.script._
 
 import akka.actor.ActorSystem
 import com.bowlingx.providers.ScriptResources
-import jdk.nashorn.api.scripting.JSObject
+import jdk.nashorn.api.scripting.{JSObject, NashornScriptEngineFactory}
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
@@ -46,7 +46,7 @@ class JavascriptEngine(
 
   val logger = Logger(this.getClass)
 
-  private[this] val engine = new ScriptEngineManager(null).getEngineByName("nashorn") // scalastyle:ignore
+  private[this] val engine = new NashornScriptEngineFactory().getScriptEngine
 
   @volatile
   private[this] var compiledScript = createCompiledScripts()

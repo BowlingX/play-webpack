@@ -1,1 +1,14 @@
-{"vendor":{"js":"/assets/compiled/vendor.js"},"server":{"js":"/assets/compiled/server.js"},"main":{"js":"/assets/compiled/main.js"},"manifest":{"js":"/assets/compiled/manifest.js"}}
+{
+  "vendor": {
+    "js": "/assets/compiled/vendor.js"
+  },
+  "server": {
+    "js": "/assets/compiled/server.js"
+  },
+  "main": {
+    "js": "/assets/compiled/main.js"
+  },
+  "manifest": {
+    "js": "/assets/compiled/manifest.js"
+  }
+}

@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-lib.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-lib-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-lib-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-plugin-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-plugin-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/root.iml" filepath="$PROJECT_DIR$/.idea/modules/root.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/root-build.iml" filepath="$PROJECT_DIR$/.idea/modules/root-build.iml" />
     </modules>
   </component>
 </project>

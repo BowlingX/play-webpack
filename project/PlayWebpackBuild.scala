@@ -3,19 +3,27 @@ import sbt._
 
 object PlayWebpackBuild {
 
-  def pluginSettings : Seq[Setting[_]] = {
-    libraryDependencies ++= Seq(
-      "io.spray" %%  "spray-json" % "1.3.3"
+  def sharedSettings: Seq[Setting[_]] = {
+    Seq(
+      organization := "com.bowlingx",
+      scalacOptions ++= Seq(
+        "-deprecation",
+        "-unchecked",
+        "-encoding", "UTF-8"
+      )
     )
   }
 
+  def pluginSettings : Seq[Setting[_]] = {
+    sharedSettings ++ (libraryDependencies ++= Seq(
+      "io.spray" %%  "spray-json" % "1.3.3"
+    ))
+  }
+
   def commonSettings: Seq[Setting[_]] = {
-    Seq(
+    sharedSettings ++ Seq(
       scalacOptions ++= Seq(
         "-target:jvm-1.8",
-        "-encoding", "UTF-8",
-        "-unchecked",
-        "-deprecation",
         "-Xfuture",
         "-Yno-adapted-args",
         "-Ywarn-dead-code",
@@ -23,7 +31,6 @@ object PlayWebpackBuild {
         "-Ywarn-value-discard",
         "-Ywarn-unused"
       ),
-      organization := "com.bowlingx",
       scalaVersion := "2.11.8"
     )
   }
