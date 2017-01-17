@@ -1,6 +1,8 @@
 play-webpack
 ------------
 
+[![CircleCI](https://circleci.com/gh/BowlingX/play-webpack.svg?style=svg)](https://circleci.com/gh/BowlingX/play-webpack)
+
 This play module will add support for `webpack` and server-side rendering of javascript 
 with the build-in `nashorn` script engine.
 

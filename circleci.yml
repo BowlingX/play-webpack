@@ -1,0 +1,9 @@
+machine:
+  environment:
+    SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -Xms3072m -Xmx3072m -XX:ReservedCodeCacheSize=384m -Dfile.encoding=UTF8"
+  java:
+    version: oraclejdk8
+
+dependencies:
+  override:
+    - cat /dev/null | sbt +test:compile
