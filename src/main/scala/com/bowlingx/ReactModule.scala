@@ -17,11 +17,11 @@ class ReactModule extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
     val logger = Logger(this.getClass)
 
-    val manifestOption = Try {
-      val cons = environment.classLoader.loadClass("com.bowlingx.webpack.WebpackManifest$").getDeclaredConstructors
+    val manifestOption = configuration.getString("webpack.manifestClass").flatMap(className => Try {
+      val cons = environment.classLoader.loadClass(className).getDeclaredConstructors
       cons(0).setAccessible(true)
       cons(0).newInstance().asInstanceOf[WebpackManifestType]
-    }.toOption
+    }.toOption)
 
     if (manifestOption.isEmpty) {
       logger.warn(

@@ -20,7 +20,7 @@ object PlayWebpackBuild {
     ))
   }
 
-  def commonSettings: Seq[Setting[_]] = {
+  def mainSettings: Seq[Setting[_]] = {
     sharedSettings ++ Seq(
       scalacOptions ++= Seq(
         "-target:jvm-1.8",

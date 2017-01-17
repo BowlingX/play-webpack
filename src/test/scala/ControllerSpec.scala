@@ -8,11 +8,12 @@ class ControllerSpec extends PlaySpec with OneAppPerTest {
 
   "WebpackController GET" should {
 
-    "render the index page from the application" in {
+    "render a javascript method" in {
       val controller = app.injector.instanceOf[WebpackController]
       val home = controller.index().apply(FakeRequest())
 
       status(home) mustBe OK
+      contentAsString(home) must include ("This is rendered in JS")
     }
 
   }

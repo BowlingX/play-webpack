@@ -1,6 +1,6 @@
 import PlayWebpackBuild._
 
-commonSettings
+mainSettings
 
 name := "play-webpack"
 
@@ -15,3 +15,17 @@ lazy val sbtPlugin = Project("play-webpack-plugin", file("src") / "sbt-plugin")
   .settings(pluginSettings:_*).dependsOn(lib).aggregate(lib)
 
 lazy val playWebpack = Project("play-webpack", file(".")).dependsOn(lib).aggregate(lib)
+
+sourceGenerators in Test in Compile += task[Seq[File]] {
+  val file = (sourceManaged in Test in Compile).value / "com" / "bowlingx" / "webpack" / "Manifest.scala"
+  val code =
+    s"""
+       |package com.bowlingx.webpack
+       |
+       |object WebpackManifest extends WebpackManifestType {
+       |  val entries:Map[String, WebpackEntry] = Map(("server" -> WebpackEntry(Some("/assets/scripts/test.js"), None)))
+       |}
+     """.stripMargin
+  IO write(file, code)
+  Seq(file)
+}
