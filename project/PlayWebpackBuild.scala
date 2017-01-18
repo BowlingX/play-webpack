@@ -64,13 +64,16 @@ object PlayWebpackBuild {
         checkSnapshotDependencies,
         inquireVersions,
         runClean,
-        releaseStepCommandAndRemaining("+test"),
+        releaseStepCommandAndRemaining("test"),
+        releaseStepCommandAndRemaining("+ clean"),
+        releaseStepCommandAndRemaining("+play-webpack-plugin/scripted"),
         setReleaseVersion,
         commitReleaseVersion,
         tagRelease,
         releaseStepCommandAndRemaining("+publishSigned"),
         setNextVersion,
         commitNextVersion,
+        releaseStepCommandAndRemaining("sonatypeReleaseAll"),
         pushChanges
       )
     )
