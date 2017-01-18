@@ -16,8 +16,8 @@ lazy val sbtPlugin = Project("play-webpack-plugin", file("src") / "sbt-plugin")
 
 lazy val playWebpack = Project("play-webpack", file(".")).dependsOn(lib).aggregate(lib)
 
-sourceGenerators in Test in Compile += task[Seq[File]] {
-  val file = (sourceManaged in Test in Compile).value / "com" / "bowlingx" / "webpack" / "Manifest.scala"
+sourceGenerators in Test += task[Seq[File]] {
+  val file = (sourceManaged in Test).value / "com" / "bowlingx" / "webpack" / "Manifest.scala"
   val code =
     s"""
        |package com.bowlingx.webpack

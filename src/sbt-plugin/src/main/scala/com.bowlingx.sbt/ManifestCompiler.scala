@@ -25,9 +25,9 @@ private[sbt] case class ManifestCompiler(jsonFile:File) {
        |
        |object WebpackManifest extends WebpackManifestType {
        |  val entries:Map[String, WebpackEntry] = Map(
-       |  ${manifest.map { case (bundle:String, entry:WebpackEntry) =>
+       |  ${manifest.map { case (bundle:String, _) =>
             s"""
-               |(${"\"" + bundle + "\""} -> $bundle)
+               |${"\"" + bundle + "\""} -> $bundle
              """.stripMargin
           }.mkString(",")}
        |)
