@@ -65,6 +65,7 @@ object PlayWebpackBuild {
         inquireVersions,
         runClean,
         releaseStepCommandAndRemaining("test"),
+        releaseStepCommandAndRemaining("+publishLocal"),
         releaseStepCommandAndRemaining("+play-webpack-plugin/scripted"),
         setReleaseVersion,
         commitReleaseVersion,
