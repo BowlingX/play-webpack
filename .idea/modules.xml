@@ -8,6 +8,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-lib-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-lib-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/play-webpack-plugin-build.iml" filepath="$PROJECT_DIR$/.idea/modules/play-webpack-plugin-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/root.iml" filepath="$PROJECT_DIR$/.idea/modules/root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/root-build.iml" filepath="$PROJECT_DIR$/.idea/modules/root-build.iml" />
     </modules>
   </component>
 </project>

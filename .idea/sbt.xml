@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$/project" />
             <option value="$PROJECT_DIR$/src/lib" />
             <option value="$PROJECT_DIR$/src/lib/project" />
+            <option value="$PROJECT_DIR$/src/play-module" />
+            <option value="$PROJECT_DIR$/src/play-module/project" />
             <option value="$PROJECT_DIR$/src/sbt-plugin" />
             <option value="$PROJECT_DIR$/src/sbt-plugin/project" />
           </set>
