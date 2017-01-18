@@ -59,7 +59,7 @@ object PlayWebpackBuild {
   }
 
   def playModuleSettings: Seq[Setting[_]] = {
-    Seq(
+    mainSettings ++ Seq(
       scalaVersion := scala211Version,
       crossScalaVersions := Seq(scala211Version),
       libraryDependencies += filters,
