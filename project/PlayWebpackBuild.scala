@@ -6,6 +6,7 @@ import sbtrelease.ReleaseStateTransformations._
 import xerial.sbt.Sonatype.SonatypeKeys._
 import scala.util.Try
 import scala.xml.Group
+import play.sbt.PlayImport._
 
 object PlayWebpackBuild {
 
@@ -14,6 +15,7 @@ object PlayWebpackBuild {
   private[this] val sonatypeUsername = Try(
     System.getenv("SONATYPE_USERNAME")
   ).toOption.flatMap(r => Option(r)).getOrElse("")
+
   private[this] val sonatypePassword = Try(
     System.getenv("SONATYPE_PASSWORD")
   ).toOption.flatMap(r => Option(r)).getOrElse("")
@@ -52,8 +54,29 @@ object PlayWebpackBuild {
         "-Ywarn-numeric-widen",
         "-Ywarn-value-discard",
         "-Ywarn-unused"
-      ),
-      scalaVersion := scala211Version
+      )
+    )
+  }
+
+  def playModuleSettings: Seq[Setting[_]] = {
+    Seq(
+      scalaVersion := scala211Version,
+      crossScalaVersions := Seq(scala211Version),
+      libraryDependencies += filters,
+      libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+      sourceGenerators in Test += task[Seq[File]] {
+        val file = (sourceManaged in Test).value / "com" / "bowlingx" / "webpack" / "Manifest.scala"
+        val code =
+          s"""
+             |package com.bowlingx.webpack
+             |
+       |object WebpackManifest extends WebpackManifestType {
+             |  val entries:Map[String, WebpackEntry] = Map(("server" -> WebpackEntry(Some("/assets/scripts/test.js"), None)))
+             |}
+     """.stripMargin
+        IO write(file, code)
+        Seq(file)
+      }
     )
   }
 

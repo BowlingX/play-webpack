@@ -12,10 +12,10 @@ import jdk.nashorn.api.scripting.{JSObject, NashornScriptEngineFactory}
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
-import scala.concurrent.{ExecutionContext, Future}
-import collection.JavaConversions._
-import scala.util.{Failure, Try}
+import scala.collection.JavaConversions._
 import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Try}
 
 trait Engine {
 
