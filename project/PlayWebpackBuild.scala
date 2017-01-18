@@ -59,6 +59,7 @@ object PlayWebpackBuild {
 
   def releaseSettings: Seq[Setting[_]] = {
     Seq(
+      releaseIgnoreUntrackedFiles := true,
       releaseCrossBuild := false,
       releaseProcess := Seq[ReleaseStep](
         checkSnapshotDependencies,
