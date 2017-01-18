@@ -1,5 +1,6 @@
 import sbt.Keys._
 import sbt._
+import com.bowlingx.meta.BuildInfo._
 
 object PlayWebpackBuild {
 
@@ -14,10 +15,17 @@ object PlayWebpackBuild {
     )
   }
 
-  def pluginSettings : Seq[Setting[_]] = {
+  def pluginSettings: Seq[Setting[_]] = {
     sharedSettings ++ (libraryDependencies ++= Seq(
-      "io.spray" %%  "spray-json" % "1.3.3"
+      "io.spray" %% "spray-json" % "1.3.3"
     ))
+  }
+
+  def scala210Project: Seq[Setting[_]] = {
+    Seq(
+      crossScalaVersions := Seq(scala210Version, scala211Version),
+      scalaVersion := scala210Version
+    )
   }
 
   def mainSettings: Seq[Setting[_]] = {
@@ -31,7 +39,7 @@ object PlayWebpackBuild {
         "-Ywarn-value-discard",
         "-Ywarn-unused"
       ),
-      scalaVersion := "2.11.8"
+      scalaVersion := scala211Version
     )
   }
 
