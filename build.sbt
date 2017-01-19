@@ -1,5 +1,7 @@
 import PlayWebpackBuild._
 
+releaseSettings
+
 lazy val root = project.in(file(".")).aggregate(lib, sbtPlugin, `play-webpack`)
     .settings(mainSettings).enablePlugins(CrossPerProjectPlugin)
 
