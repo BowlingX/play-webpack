@@ -3,7 +3,6 @@ import sbt._
 import com.bowlingx.meta.BuildInfo._
 import sbtrelease.ReleasePlugin.autoImport._
 import sbtrelease.ReleaseStateTransformations._
-import xerial.sbt.Sonatype.SonatypeKeys._
 import scala.util.Try
 import scala.xml.Group
 import play.sbt.PlayImport._
@@ -22,6 +21,7 @@ object PlayWebpackBuild {
 
   def sharedSettings: Seq[Setting[_]] = {
     Seq(
+      credentials += getCredentials,
       organization := "com.bowlingx",
       scalacOptions ++= Seq(
         "-deprecation",
@@ -32,9 +32,12 @@ object PlayWebpackBuild {
   }
 
   def pluginSettings: Seq[Setting[_]] = {
-    sharedSettings ++ (libraryDependencies ++= Seq(
+    sharedSettings ++ (
+      libraryDependencies ++= Seq(
       "io.spray" %% "spray-json" % "1.3.3"
-    ))
+    )) ++ Seq(
+      crossScalaVersions := Seq(scala210Version)
+    )
   }
 
   def scala210Project: Seq[Setting[_]] = {
@@ -114,8 +117,6 @@ object PlayWebpackBuild {
   def publishSettings: Seq[Setting[_]] = {
     Seq(
       publishMavenStyle := false,
-      sonatypeProfileName := sonatypeUsername,
-      credentials += getCredentials,
       publishArtifact in Test := false,
       packageOptions <<= (packageOptions, name, version, organization) map {
         (opts, title, version, vendor) =>

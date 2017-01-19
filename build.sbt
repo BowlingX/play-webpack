@@ -3,7 +3,7 @@ import PlayWebpackBuild._
 releaseSettings
 
 lazy val root = project.in(file(".")).aggregate(lib, sbtPlugin, `play-webpack`)
-    .settings(mainSettings).enablePlugins(CrossPerProjectPlugin)
+    .settings(mainSettings ++ Seq(packagedArtifacts := Map.empty)).enablePlugins(CrossPerProjectPlugin)
 
 lazy val `play-webpack` = project.in(file("src") / "play-module").dependsOn(lib)
     .settings(playModuleSettings ++ publishSettings)
