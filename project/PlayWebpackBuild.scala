@@ -6,18 +6,21 @@ import sbtrelease.ReleaseStateTransformations._
 import scala.util.Try
 import scala.xml.Group
 import play.sbt.PlayImport._
+import com.typesafe.sbt.SbtPgp.autoImportImpl._
 
 object PlayWebpackBuild {
 
   private[this] val projectStartYear = 2017
 
-  private[this] val sonatypeUsername = Try(
+  private[this] val sonatypeUsername = Option(
     System.getenv("SONATYPE_USERNAME")
-  ).toOption.flatMap(r => Option(r)).getOrElse("")
+  ).getOrElse("")
 
-  private[this] val sonatypePassword = Try(
+  private[this] val sonatypePassword = Option(
     System.getenv("SONATYPE_PASSWORD")
-  ).toOption.flatMap(r => Option(r)).getOrElse("")
+  ).getOrElse("")
+
+  private[this] val envPassphrase = Option(System.getenv("PGP_PASSPHRASE")).map(_.toCharArray)
 
   def sharedSettings: Seq[Setting[_]] = {
     Seq(
@@ -116,6 +119,7 @@ object PlayWebpackBuild {
 
   def publishSettings: Seq[Setting[_]] = {
     Seq(
+      pgpPassphrase := envPassphrase,
       publishMavenStyle := false,
       publishArtifact in Test := false,
       packageOptions <<= (packageOptions, name, version, organization) map {

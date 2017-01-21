@@ -1,11 +1,13 @@
 machine:
   environment:
     SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -Xms3072m -Xmx3072m -XX:ReservedCodeCacheSize=384m -Dfile.encoding=UTF8"
+    KEYSTORE: ${HOME}/.sbt/gpg/secring.asc
   java:
     version: oraclejdk8
 
 dependencies:
   override:
+    - bash ./scripts/download_pgp_key.sh
     - cat /dev/null | sbt +test:compile
 
 test:
@@ -14,3 +16,9 @@ test:
   post:
       - mkdir -p $CIRCLE_TEST_REPORTS/junit/
       - find . -type f -regex "./test_out/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - +publishSigned
