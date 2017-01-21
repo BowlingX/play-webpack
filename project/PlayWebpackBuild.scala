@@ -37,8 +37,8 @@ object PlayWebpackBuild {
   def pluginSettings: Seq[Setting[_]] = {
     sharedSettings ++ (
       libraryDependencies ++= Seq(
-      "io.spray" %% "spray-json" % "1.3.3"
-    )) ++ Seq(
+        "io.spray" %% "spray-json" % "1.3.3"
+      )) ++ Seq(
       crossScalaVersions := Seq(scala210Version)
     )
   }
@@ -122,40 +122,38 @@ object PlayWebpackBuild {
       pgpPassphrase := envPassphrase,
       publishMavenStyle := false,
       publishArtifact in Test := false,
-      packageOptions <<= (packageOptions, name, version, organization) map {
-        (opts, title, version, vendor) =>
-          opts :+ Package.ManifestAttributes(
-            "Created-By" -> "Simple Build Tool",
-            "Built-By" -> System.getProperty("user.name"),
-            "Build-Jdk" -> System.getProperty("java.version"),
-            "Specification-Title" -> title,
-            "Specification-Vendor" -> "David Heidrich",
-            "Specification-Version" -> version,
-            "Implementation-Title" -> title,
-            "Implementation-Version" -> version,
-            "Implementation-Vendor-Id" -> vendor,
-            "Implementation-Vendor" -> "David Heidrich",
-            "Implementation-Url" -> "https://github.com/BowlingX/play-webpack"
-          )
+      packageOptions += {
+        Package.ManifestAttributes(
+          "Created-By" -> "Simple Build Tool",
+          "Built-By" -> System.getProperty("user.name"),
+          "Build-Jdk" -> System.getProperty("java.version"),
+          "Specification-Title" -> name.value,
+          "Specification-Vendor" -> "David Heidrich",
+          "Specification-Version" -> version.value,
+          "Implementation-Title" -> name.value,
+          "Implementation-Version" -> version.value,
+          "Implementation-Vendor-Id" -> organization.value,
+          "Implementation-Vendor" -> "David Heidrich",
+          "Implementation-Url" -> "https://github.com/BowlingX/play-webpack"
+        )
       },
-
       homepage := Some(url("https://github.com/BowlingX/play-webpack")),
       startYear := Some(projectStartYear),
       licenses := Seq(("MIT", url("https://raw.githubusercontent.com/BowlingX/play-webpack/master/LICENSE.md"))),
-      pomExtra <<= pomExtra { (pom) =>
-        pom ++ Group(
+      pomExtra := {
+        Group(
           <scm>
             <connection>scm:git:git://github.com/BowlingX/play-webpack.git</connection>
             <developerConnection>scm:git:git@github.com:BowlingX/play-webpack.git</developerConnection>
             <url>https://github.com/BowlingX/play-webpack</url>
           </scm>
-            <developers>
-              <developer>
-                <id>BowlingX</id>
-                <name>David Heidrich</name>
-                <url>http://bowlingx.com</url>
-              </developer>
-            </developers>
+          <developers>
+            <developer>
+              <id>BowlingX</id>
+              <name>David Heidrich</name>
+              <url>http://bowlingx.com</url>
+            </developer>
+          </developers>
         )
       }
     )

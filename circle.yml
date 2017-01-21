@@ -1,7 +1,7 @@
 machine:
   environment:
     SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -Xms3072m -Xmx3072m -XX:ReservedCodeCacheSize=384m -Dfile.encoding=UTF8"
-    KEYSTORE_DIR: ${HOME}/.sbt/gpg
+    KEYSTORE_DIR: ${HOME}/.gnupg
   java:
     version: oraclejdk8
 
