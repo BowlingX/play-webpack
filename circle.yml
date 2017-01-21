@@ -21,4 +21,4 @@ deployment:
   hub:
     branch: master
     commands:
-      - +publishSigned
+      - cat /dev/null | sbt +publishSigned
