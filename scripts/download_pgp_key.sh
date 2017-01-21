@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ $KEYSTORE_FOLDER && ${KEYSTORE_FOLDER} && $KEYSTORE_URI_PUB && ${KEYSTORE_URI_PUB} && \
+if [[ $KEYSTORE_DIR && ${KEYSTORE_DIR} && $KEYSTORE_URI_PUB && ${KEYSTORE_URI_PUB} && \
     $KEYSTORE_URI_PRIV && ${KEYSTORE_URI_PRIV} ]]
 then
     echo "Downloading PGP file..."
