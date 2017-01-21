@@ -1,7 +1,7 @@
 machine:
   environment:
     SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -Xms3072m -Xmx3072m -XX:ReservedCodeCacheSize=384m -Dfile.encoding=UTF8"
-    KEYSTORE: ${HOME}/.sbt/gpg/secring.asc
+    KEYSTORE_DIR: ${HOME}/.sbt/gpg
   java:
     version: oraclejdk8
 
