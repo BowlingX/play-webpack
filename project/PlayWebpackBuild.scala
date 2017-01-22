@@ -90,13 +90,11 @@ object PlayWebpackBuild {
     Seq(
       releaseCrossBuild := false,
       releaseProcess := Seq[ReleaseStep](
-        releaseStepCommandAndRemaining("+publishLocal"),
-        runClean,
         checkSnapshotDependencies,
         inquireVersions,
         runClean,
-        releaseStepCommandAndRemaining("+publishLocal"),
         releaseStepCommandAndRemaining("+test"),
+        releaseStepCommandAndRemaining("+publishLocal"),
         releaseStepCommandAndRemaining("+play-webpack-plugin/scripted"),
         setReleaseVersion,
         commitReleaseVersion,
