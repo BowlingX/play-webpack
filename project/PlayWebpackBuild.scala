@@ -120,7 +120,7 @@ object PlayWebpackBuild {
   def publishSettings: Seq[Setting[_]] = {
     Seq(
       pgpPassphrase := envPassphrase,
-      publishMavenStyle := false,
+      publishMavenStyle := true,
       publishArtifact in Test := false,
       packageOptions += {
         Package.ManifestAttributes(
