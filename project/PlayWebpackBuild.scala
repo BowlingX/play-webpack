@@ -91,6 +91,7 @@ object PlayWebpackBuild {
       releaseCrossBuild := false,
       releaseProcess := Seq[ReleaseStep](
         releaseStepCommandAndRemaining("+publishLocal"),
+        releaseStepCommandAndRemaining("+clean"),
         checkSnapshotDependencies,
         inquireVersions,
         runClean,
