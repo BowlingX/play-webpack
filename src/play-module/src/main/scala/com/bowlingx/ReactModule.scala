@@ -3,8 +3,7 @@ package com.bowlingx
 import java.net.URL
 import java.nio.file.Paths
 
-import com.bowlingx.playframework.ScriptActionBuilder
-import com.bowlingx.providers.{ScriptActionProvider, ScriptResources}
+import com.bowlingx.providers.{EngineProvide, ScriptResources}
 import com.bowlingx.webpack._
 import play.api.{Configuration, Environment, Logger}
 import play.api.inject.{Binding, Module}
@@ -17,7 +16,7 @@ class ReactModule extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
     val logger = Logger(this.getClass)
 
-    val manifestOption = configuration.getString("webpack.manifestClass").flatMap(className => Try {
+    val manifestOption = configuration.getOptional[String]("webpack.manifestClass").flatMap(className => Try {
       val cons = environment.classLoader.loadClass(className).getDeclaredConstructors
       cons(0).setAccessible(true)
       cons(0).newInstance().asInstanceOf[WebpackManifestType]
@@ -31,7 +30,7 @@ class ReactModule extends Module {
 
     val publicToServerEntry = this.mapServerPath(configuration, manifestOption)
 
-    val prependedBundles = configuration.getStringList("webpack.prependBundles").map(list =>
+    val prependedBundles = configuration.getOptional[Seq[String]]("webpack.prependBundles").map(list =>
       publicToServerEntry.map(entry => entry.entries.filter { case (index, _) =>
        list.contains(index)}.toSeq.sortBy { case(index, _) => list.indexOf(index) }
       ).getOrElse(Seq.empty)
@@ -58,11 +57,11 @@ class ReactModule extends Module {
                      environment: Environment,
                      publicToServerEntry: Option[WebpackManifestType],
                      prependedBundles: Seq[(String, WebpackEntryType)]
-                   ): Seq[Binding[ScriptActionBuilder]] = {
+                   ): Seq[Binding[Engine]] = {
     val engines = publicToServerEntry.map(manifest => {
       manifest.entries.filter(e => !prependedBundles.contains(e)).map { case (index, entry) =>
-        bind(classOf[ScriptActionBuilder]).qualifiedWith(index).to(
-          new ScriptActionProvider(
+        bind(classOf[Engine]).qualifiedWith(index).to(
+          new EngineProvide(
             ScriptResources(this.createVendorResources(environment, Some(entry), prependedBundles))
           )
         ).in(classOf[Singleton])
@@ -70,8 +69,8 @@ class ReactModule extends Module {
     }).getOrElse(Seq.empty)
 
     // default engine that just contains the prepended entries
-    engines :+ bind(classOf[ScriptActionBuilder]).to(
-      new ScriptActionProvider(ScriptResources(this.createVendorResources(environment, None, prependedBundles)))
+    engines :+ bind(classOf[Engine]).to(
+      new EngineProvide(ScriptResources(this.createVendorResources(environment, None, prependedBundles)))
     ).in(classOf[Singleton])
   }
 
@@ -108,8 +107,8 @@ class ReactModule extends Module {
     */
   def mapServerPath(configuration: Configuration, manifest: Option[WebpackManifestType]): Option[WebpackManifestType] = {
     manifest.map { manifest =>
-      val publicPathOption = configuration.getString("webpack.publicPath")
-      val serverPathOption = configuration.getString("webpack.serverPath")
+      val publicPathOption = configuration.getOptional[String]("webpack.publicPath")
+      val serverPathOption = configuration.getOptional[String]("webpack.serverPath")
       WebpackManifestContainer((publicPathOption, serverPathOption) match {
         case (Some(publicPath), Some(serverPath)) =>
           manifest.entries.mapValues { case (entry: WebpackEntry) =>

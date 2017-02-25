@@ -3,7 +3,6 @@ import sbt._
 import com.bowlingx.meta.BuildInfo._
 import sbtrelease.ReleasePlugin.autoImport._
 import sbtrelease.ReleaseStateTransformations._
-import scala.util.Try
 import scala.xml.Group
 import play.sbt.PlayImport._
 import com.typesafe.sbt.SbtPgp.autoImportImpl._
@@ -45,8 +44,8 @@ object PlayWebpackBuild {
 
   def scala210Project: Seq[Setting[_]] = {
     Seq(
-      crossScalaVersions := Seq(scala211Version, scala210Version),
-      scalaVersion := scala211Version
+      crossScalaVersions := Seq(scala212Version, scala211Version, scala210Version),
+      scalaVersion := scala212Version
     )
   }
 
@@ -66,10 +65,10 @@ object PlayWebpackBuild {
 
   def playModuleSettings: Seq[Setting[_]] = {
     mainSettings ++ Seq(
-      scalaVersion := scala211Version,
-      crossScalaVersions := Seq(scala211Version),
+      scalaVersion := scala212Version,
+      crossScalaVersions := Seq(scala212Version, scala211Version),
       libraryDependencies += filters,
-      libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+      libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0-M2" % Test,
       sourceGenerators in Test += task[Seq[File]] {
         val file = (sourceManaged in Test).value / "com" / "bowlingx" / "webpack" / "Manifest.scala"
         val code =

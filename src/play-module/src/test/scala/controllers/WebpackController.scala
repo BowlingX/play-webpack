@@ -2,14 +2,21 @@ package controllers
 
 import javax.inject._
 
-import com.bowlingx.playframework.ScriptActionBuilder
+import com.bowlingx.Engine
 import play.api.mvc._
 
-@Singleton
-class WebpackController @Inject()(js: ScriptActionBuilder) extends Controller {
+import scala.concurrent.ExecutionContext
+import scala.util.Success
 
-  def index: Action[AnyContent] = js.call("render") { request =>
-    Ok(request.render.toString)
+@Singleton
+class WebpackController @Inject()
+(engine: Engine, components: ControllerComponents)(implicit context:ExecutionContext) extends AbstractController(components) {
+
+  def index: Action[AnyContent] = Action.async {
+    engine.render("render") map {
+      case Success(Some(renderResult)) => Ok(renderResult.toString)
+      case _ => NotFound
+    }
   }
 
 }

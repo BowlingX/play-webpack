@@ -12,7 +12,7 @@ import jdk.nashorn.api.scripting.{JSObject, NashornScriptEngineFactory}
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Try}
@@ -71,7 +71,7 @@ class JavascriptEngine(
       val thisKeyOption = Try(Some(watch.poll())).toOption.flatten
       thisKeyOption.foreach(thisKey => {
         keys.find(_ == thisKey).foreach { k =>
-          val events = k.pollEvents()
+          val events = k.pollEvents().asScala
           events.foreach(event => {
             if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
               val file = event.context().asInstanceOf[Path].toString
@@ -94,7 +94,7 @@ class JavascriptEngine(
 
   def createCompiledScripts(): CompiledScript = {
     engine.asInstanceOf[Compilable].compile(new InputStreamReader(new SequenceInputStream(
-      util.Collections.enumeration(bootstrap +: vendorFiles.resources.map(_.openStream()))
+      util.Collections.enumeration((bootstrap +: vendorFiles.resources.map(_.openStream())).asJava)
     )))
   }
 
