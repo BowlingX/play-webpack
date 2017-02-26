@@ -3,6 +3,7 @@ play-webpack
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ca293d1006d4416a9aeb76bf323db6e)](https://www.codacy.com/app/bowlingx/play-webpack?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BowlingX/play-webpack&amp;utm_campaign=Badge_Grade)
 [![CircleCI](https://circleci.com/gh/BowlingX/play-webpack.svg?style=svg)](https://circleci.com/gh/BowlingX/play-webpack)
+[![Maven Central](https://img.shields.io/maven-central/v/com.bowlingx/play-webpack_2.12.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22play-webpack_2.12%22)
 
 This play module will add support for `webpack` and server-side rendering of javascript 
 with the build-in `nashorn` script engine.
@@ -12,7 +13,7 @@ with the build-in `nashorn` script engine.
 - JDK 8
 - scala 2.11 or scala 2.12
 - play 2.6
-- webpack
+- webpack or anything the generates a JSON file like the one below
 
 ## Setup
 
@@ -94,7 +95,26 @@ The default path of the manifest file (relative to project root)
     
     webpackManifest := Option(file("conf/webpack-assets.json"))
 
-### Workflow
+# Server-Side Rendering with Nashorn
 
-Any file changes (including manifest file) are picked up automatically and a recompilation is triggered, 
+The main purpose of this plugin is to provide an easy way to render javascript inside a play action.
+After enabling the module in you `application.conf`, you can hook up your controller like this:
+
+    @Singleton
+    class YourPlayController @Inject()(engine: Engine, components: ControllerComponents)(implicit context:ExecutionContext) extends AbstractController(components) {
+    
+      def index: Action[AnyContent] = Action.async {
+        engine.render("yourGlobalMethod", "any", "list", "of", "arguments") map {
+          case Success(Some(renderResult)) => Ok(renderResult.toString)
+          case _ => NotFound
+        }
+      }
+    }
+
+See a full example in `src/play-module/src/test`.
+
+## Workflow
+
+Any file changes (including the manifest file) are picked up automatically and a recompilation is triggered, 
 so the normal "change and reload" cycle that leads to a faster development experience is kept.
+
