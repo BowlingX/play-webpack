@@ -129,5 +129,6 @@
     <orderEntry type="library" scope="TEST" name="SBT: com.novocode:junit-interface:0.11:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: com.google.code.gson:gson:2.3.1:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: com.google.code.findbugs:jsr305:3.0.1:jar" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.12.1" level="application" />
   </component>
 </module>

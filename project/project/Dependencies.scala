@@ -1,7 +1,7 @@
 package meta
 
 object Dependencies {
-  def playVersion:String = "2.6.0-M1"
+  def playVersion:String = "2.6.0-M3"
 
   def scala210Version:String = "2.10.6"
 

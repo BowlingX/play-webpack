@@ -124,6 +124,7 @@ class JavascriptEngine(
         |var console = {};
         |console.debug = print;
         |console.warn = print;
+        |console.error = print;
         |console.log = print;
       """
         .stripMargin
