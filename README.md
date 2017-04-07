@@ -19,11 +19,11 @@ with the build-in `nashorn` script engine.
 
 Create a file in ~/project/play-webpack.sbt
 
-    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.3")
+    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.4")
     
 Add the following dependencies:
     
-    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.3"
+    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.4"
 
 The plugin will convert a webpack JSON manifest file (generated with https://github.com/kossnocorp/assets-webpack-plugin) to a scala object 
 that can be used directly in play templates for example. The plugin is theoretically not limited to play. 
@@ -112,6 +112,25 @@ After enabling the module in you `application.conf`, you can hook up your contro
     }
 
 See a full example in `src/play-module/src/test`.
+
+# Promises
+
+The library makes it possible to use an async result. 
+Support for `setTimeout` and `clearTimeout` exists in an experimental state in `0.1.5-SNAPSHOT`.
+
+All this just requires to return a `Promise` in the render function. A simulated `Promise` looks like this:
+
+    global.yourGlobalMethod = function () {
+      return {
+        then: function (resolve, reject) {
+          setTimeout(function () {
+            resolve("This is an async resolved String");
+          }, 100);
+        }
+      };
+    };
+
+If you need `Promise` support in your library, use any polyfill available. This library does not ship with a polyfill.
 
 ## Workflow
 
