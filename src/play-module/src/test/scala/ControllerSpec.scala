@@ -15,5 +15,12 @@ class ControllerSpec extends PlaySpec with OneAppPerTest {
       contentAsString(home) must include ("This is rendered in JS")
     }
 
+    "render an async javascript method" in {
+      val controller = app.injector.instanceOf[WebpackController]
+      val home = controller.asyncRenderedJs().apply(FakeRequest())
+      status(home) mustBe OK
+      contentAsString(home) must include ("This is an async resolved String")
+    }
+
   }
 }
