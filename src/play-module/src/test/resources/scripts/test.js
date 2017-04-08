@@ -6,7 +6,9 @@ global.renderPromise = function () {
   return {
     then: function (resolve) {
       setTimeout((function () {
-        resolve("This is an async resolved String");
+        setTimeout(function(){
+          resolve("This is an async resolved String");
+        }, 20);
       }.bind({ someContext: "context" })), 100);
     }
   };

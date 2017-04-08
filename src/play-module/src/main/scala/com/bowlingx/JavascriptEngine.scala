@@ -7,7 +7,10 @@ import java.util
 import java.util.function.Consumer
 import javax.script._
 
-import akka.actor.{ActorSystem, Cancellable}
+import akka.pattern.ask
+import akka.actor.{ActorSystem, Cancellable, Props}
+import akka.util.Timeout
+import com.bowlingx.actors.ExecutorActor
 import com.bowlingx.providers.ScriptResources
 import jdk.nashorn.api.scripting.{JSObject, NashornScriptEngineFactory, ScriptObjectMirror}
 import play.api.Logger
@@ -114,12 +117,14 @@ class JavascriptEngine(
   : Future[Try[Option[AnyRef]]] = {
     val promises = collection.mutable.ArrayBuffer[Future[Boolean]]()
     val cancels = collection.mutable.ArrayBuffer[(Cancellable, Promise[Boolean])]()
+    val timeoutExecutor = actorSystem.actorOf(Props[ExecutorActor])
 
-    val setTimeout = (script: JSObject, delay: Int) => {
+    val setTimeout = (function: JSObject, delay: Int) => {
       val promise = Promise[Boolean]()
       val cancelable = actorSystem.scheduler.scheduleOnce(delay.milliseconds) {
-        script.call(null) // scalastyle:ignore
-        promise.success(true)
+        timeoutExecutor.?(function)(Timeout(5.seconds)) foreach { _ =>
+          promise.success(true)
+        }
         ()
       }
       promises += promise.future
@@ -132,8 +137,8 @@ class JavascriptEngine(
       promise.success(false)
     }
 
-    scriptContext.setAttribute("__setTimeout", setTimeout, ScriptContext.ENGINE_SCOPE)
-    scriptContext.setAttribute("__clearTimeout", clearTimeout, ScriptContext.ENGINE_SCOPE)
+    scriptContext.setAttribute("__play_webpack_setTimeout", setTimeout, ScriptContext.ENGINE_SCOPE)
+    scriptContext.setAttribute("__play_webpack_clearTimeout", clearTimeout, ScriptContext.ENGINE_SCOPE)
 
     callback(promises)
   }
@@ -142,13 +147,13 @@ class JavascriptEngine(
     // Make sure we work in a different context to prevent issues with other threads
     val scriptContext = new SimpleScriptContext()
     scriptContext.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE)
-    compiledScript.eval(scriptContext)
     createEventLoop(scriptContext, promises => {
+      compiledScript.eval(scriptContext)
       val function = Option(scriptContext.getAttribute(method, ScriptContext.ENGINE_SCOPE).asInstanceOf[JSObject])
       function match {
         case Some(fn) =>
           val result = Try {
-            Option(fn.call(null, arguments.map(_.asInstanceOf[Object]): _*)) map {  // scalastyle:ignore
+            Option(fn.call(null, arguments.map(_.asInstanceOf[Object]): _*)) map { // scalastyle:ignore
               case result: ScriptObjectMirror if result.hasMember("then") =>
                 val promise = Promise[AnyRef]()
                 result.callMember("then", new Consumer[AnyRef] {
@@ -194,19 +199,19 @@ class JavascriptEngine(
         |console.trace = print;
         |
         |global.setTimeout = function(fn, delay) {
-        |  return __setTimeout.apply(fn, delay);
+        |  return __play_webpack_setTimeout.apply(fn, delay || 0);
         |};
         |
         |global.clearTimeout = function(timer) {
-        |  return __clearTimeout.apply(timer);
+        |  return __play_webpack_clearTimeout.apply(timer);
         |};
         |
         |global.setImmediate = function(fn) {
-        |  return __setTimeout.apply(fn, 0);
+        |  return __play_webpack_setTimeout.apply(fn, 0);
         |};
         |
         |global.clearImmediate = function(timer) {
-        |  return __clearTimeout.apply(timer);
+        |  return __play_webpack_clearTimeout.apply(timer);
         |};
       """
         .stripMargin
