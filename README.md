@@ -85,7 +85,7 @@ The plugin defines the following configuration:
 
       # The public path of the assets
       publicPath = "/assets/compiled"
-      # The path where they are stored relative to project route
+      # The path where they are stored relative to project root
       serverPath = "/public/compiled"
     }
 
@@ -113,9 +113,9 @@ After enabling the module in you `application.conf`, you can hook up your contro
 
 See a full example in `src/play-module/src/test`.
 
-# Promises
+## Promises
 
-The library makes it possible to use an async result. 
+The library makes it possible to use an async result.
 Support for `setTimeout` and `clearTimeout` exists in an experimental state in `0.1.5-SNAPSHOT`.
 
 All this just requires to return a `Promise` in the render function. A simulated `Promise` looks like this:

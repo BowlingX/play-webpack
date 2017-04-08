@@ -27,14 +27,14 @@ private[sbt] case class ManifestCompiler(jsonFile:File) {
        |  val entries:Map[String, WebpackEntry] = Map(
        |  ${manifest.map { case (bundle:String, _) =>
             s"""
-               |${"\"" + bundle + "\""} -> $bundle
+               |${"\"" + bundle + "\""} -> `$bundle`
              """.stripMargin
           }.mkString(",")}
        |)
        |  ${manifest.map { case (bundle:String, entry:WebpackEntry) =>
               s"""
                  |
-                 |lazy val $bundle = WebpackEntry(
+                 |lazy val `$bundle` = WebpackEntry(
                  |${entry.js.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")},
                  |${entry.css.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")}
                  |)
