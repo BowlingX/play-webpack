@@ -116,7 +116,7 @@ See a full example in `src/play-module/src/test`.
 ## Promises
 
 The library makes it possible to use an async result.
-Support for `setTimeout` and `clearTimeout` exists in an experimental state in `0.1.5-SNAPSHOT`.
+Support for `setTimeout` and `clearTimeout` exists since version `0.1.5`.
 
 All this just requires to return a `Promise` in the render function. A simulated `Promise` looks like this:
 
