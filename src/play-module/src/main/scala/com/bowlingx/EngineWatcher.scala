@@ -3,7 +3,7 @@ package com.bowlingx
 import java.io.{ByteArrayInputStream, InputStreamReader, SequenceInputStream}
 import java.nio.file.{FileSystems, Path, Paths, StandardWatchEventKinds}
 import java.util
-import javax.script.{Compilable, CompiledScript}
+import javax.script.{Compilable, CompiledScript, ScriptEngine}
 
 import akka.actor.ActorSystem
 import com.bowlingx.providers.ScriptResources
@@ -19,7 +19,7 @@ import scala.concurrent.duration._
 
 trait EngineWatcher {
 
-  protected val engine = new NashornScriptEngineFactory().getScriptEngine
+  protected val engine : ScriptEngine = new NashornScriptEngineFactory().getScriptEngine
   protected val vendorFiles: ScriptResources
   val actorSystem: ActorSystem
   val lifecycle:ApplicationLifecycle
@@ -28,7 +28,7 @@ trait EngineWatcher {
   val logger = Logger(this.getClass)
 
   @volatile
-  protected var compiledScript = createCompiledScripts()
+  protected var compiledScript : CompiledScript = createCompiledScripts()
 
   protected def createCompiledScripts(): CompiledScript = {
     engine.asInstanceOf[Compilable].compile(new InputStreamReader(new SequenceInputStream(
