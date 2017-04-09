@@ -1,9 +1,10 @@
 import controllers.WebpackController
 import org.scalatestplus.play._
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.test.Helpers._
 import play.api.test._
 
-class ControllerSpec extends PlaySpec with OneAppPerTest {
+class ControllerSpec extends PlaySpec with GuiceOneAppPerTest {
 
   "WebpackController GET" should {
 
