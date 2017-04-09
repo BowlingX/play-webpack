@@ -19,11 +19,11 @@ with the build-in `nashorn` script engine.
 
 Create a file in ~/project/play-webpack.sbt
 
-    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.4")
+    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.5")
     
 Add the following dependencies:
     
-    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.4"
+    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.5"
 
 The plugin will convert a webpack JSON manifest file (generated with https://github.com/kossnocorp/assets-webpack-plugin) to a scala object 
 that can be used directly in play templates for example. The plugin is theoretically not limited to play. 
@@ -131,6 +131,13 @@ All this just requires to return a `Promise` in the render function. A simulated
     };
 
 If you need `Promise` support in your library, use any polyfill available. This library does not ship with a polyfill.
+
+Supported Libraries (tested by the Author)
+
+- reactjs
+- react-apollo (https://github.com/apollographql/react-apollo)
+
+Sample integration Demo with apollo and sangria (http://sangria-graphql.org/) is on it's way.
 
 ## Workflow
 
