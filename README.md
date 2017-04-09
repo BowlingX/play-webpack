@@ -74,7 +74,7 @@ Sample twirl Template:
 
 ### Default Settings
 
-The plugin defines the following configuration:
+The plugin defines the following configuration (your `application.conf`):
 
     webpack {
       # the default bundles to include
@@ -88,10 +88,8 @@ The plugin defines the following configuration:
       # The path where they are stored relative to project root
       serverPath = "/public/compiled"
     }
-
-    play.modules.enabled += "com.bowlingx.ReactModule"
     
-The default path of the manifest file (relative to project root)
+The default path of the manifest file (relative to project root) (in your `build.sbt`)
     
     webpackManifest := Option(file("conf/webpack-assets.json"))
 
