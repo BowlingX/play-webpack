@@ -4,14 +4,12 @@ import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 import javax.script.{ScriptContext, SimpleScriptContext}
 
-import akka.actor.{ActorSystem, Cancellable, Props}
-import akka.util.Timeout
+import akka.actor.{ActorSystem, Cancellable, PoisonPill, Props}
 import com.bowlingx.actors.ExecutorActor
 import jdk.nashorn.api.scripting.JSObject
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.Try
-import akka.pattern.ask
 
 import scala.concurrent.duration._
 
@@ -20,8 +18,7 @@ import scala.concurrent.duration._
   */
 trait ScriptEventLoop {
 
-  val actorSystem:ActorSystem
-  private val promiseTimeout = 10.seconds
+  val actorSystem: ActorSystem
   type FutureHolder = collection.mutable.ArrayBuffer[(Cancellable, Promise[Boolean], Future[Boolean])]
 
   /**
@@ -34,7 +31,7 @@ trait ScriptEventLoop {
     */
   protected def createEventLoop(scriptContext: SimpleScriptContext,
                                 callback: (FutureHolder) => Future[Try[Option[AnyRef]]])
-                                   (implicit context: ExecutionContext)
+                               (implicit context: ExecutionContext)
   : Future[Try[Option[AnyRef]]] = {
     val cancels = collection.mutable.ArrayBuffer[(Cancellable, Promise[Boolean], Future[Boolean])]()
     val timeoutExecutor = actorSystem.actorOf(Props[ExecutorActor])
@@ -42,9 +39,7 @@ trait ScriptEventLoop {
     val setTimeout = (function: JSObject, delay: Int) => {
       val promise = Promise[Boolean]()
       val cancelable = actorSystem.scheduler.scheduleOnce(delay.milliseconds) {
-        timeoutExecutor.?(function)(Timeout(promiseTimeout)) foreach { _ =>
-          promise.success(true)
-        }
+        timeoutExecutor ! (function -> promise)
         ()
       }
       (cancels += Tuple3(cancelable, promise, promise.future)).size
@@ -59,7 +54,13 @@ trait ScriptEventLoop {
     scriptContext.setAttribute("__play_webpack_setTimeout", setTimeout, ScriptContext.ENGINE_SCOPE)
     scriptContext.setAttribute("__play_webpack_clearTimeout", clearTimeout, ScriptContext.ENGINE_SCOPE)
 
-    callback(cancels)
+    val result = callback(cancels)
+
+    result.onComplete(_ => {
+      timeoutExecutor ! PoisonPill
+    })
+
+    result
   }
 
   /**
