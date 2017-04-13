@@ -13,3 +13,15 @@ global.renderPromise = function () {
     }
   };
 };
+
+global.testPerformance = function() {
+  return {
+    then: function (resolve) {
+      setTimeout((function () {
+        setTimeout(function(){
+          resolve("This is an async resolved String");
+        }, 0);
+      }.bind({ someContext: "context" })), 1);
+    }
+  };
+};

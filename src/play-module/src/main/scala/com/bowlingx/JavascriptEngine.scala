@@ -34,38 +34,31 @@ class JavascriptEngine(
     scriptContext.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE)
     createEventLoop(scriptContext, promises => {
       compiledScript.eval(scriptContext)
-      val function = Option(scriptContext.getAttribute(method, ScriptContext.ENGINE_SCOPE).asInstanceOf[JSObject])
-      function match {
-        case Some(fn) =>
-          val result = Try {
-            Option(fn.call(null, arguments.map(_.asInstanceOf[Object]): _*)) map { // scalastyle:ignore
-              case result: ScriptObjectMirror if result.hasMember("then") =>
-                val promise = Promise[AnyRef]()
-                result.callMember("then", new Consumer[AnyRef] {
-                  override def accept(t: AnyRef): Unit = {
-                    promise.success(t)
-                    ()
-                  }
-                }, new Consumer[AnyRef] {
-                  override def accept(t: AnyRef): Unit = {
-                    promise.failure(new RuntimeException(s"Promise failed with message: '${t.toString}'"))
-                    ()
-                  }
-                })
-                promise.future
-              case anyResult => Future(anyResult)
+      val result = Try {
+        val global = scriptContext.getAttribute("window")
+        compiledScript.getEngine.asInstanceOf[Invocable].invokeMethod(global, method, arguments.map(_.asInstanceOf[Object]): _*)
+      } map { // scalastyle:ignore
+        case result: ScriptObjectMirror if result.hasMember("then") =>
+          val promise = Promise[AnyRef]()
+          result.callMember("then", new Consumer[AnyRef] {
+            override def accept(t: AnyRef): Unit = {
+              promise.success(t)
+              ()
             }
-          }
-          Future.sequence(promises.map(_._3)).flatMap(_ => result match {
-            case Success(Some(future)) => future.map(r => Success(Some(r)))
-            case Success(None) => Future(Success(None))
-            case Failure(any) => Future(Failure(any))
+          }, new Consumer[AnyRef] {
+            override def accept(t: AnyRef): Unit = {
+              promise.failure(new RuntimeException(s"Promise failed with message: '${t.toString}'"))
+              ()
+            }
           })
-
-        case _ => Future {
-          Failure(new RuntimeException(s"Could not find method `$method` in current context."))
-        }
+          promise.future
+        case anyResult => Future(anyResult)
       }
+      Future.sequence(promises.map(_._3)).flatMap(_ => result match {
+        case Success(future) => future.map(r => Success(Option(r)))
+        case Failure(any) => Future(Failure(any))
+      })
+
     })
   }
 }

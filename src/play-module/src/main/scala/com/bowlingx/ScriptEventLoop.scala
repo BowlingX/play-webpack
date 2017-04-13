@@ -29,7 +29,7 @@ trait ScriptEventLoop {
     * @param context       execution context
     * @return
     */
-  protected def createEventLoop(scriptContext: SimpleScriptContext,
+  protected def createEventLoop(scriptContext: ScriptContext,
                                 callback: (FutureHolder) => Future[Try[Option[AnyRef]]])
                                (implicit context: ExecutionContext)
   : Future[Try[Option[AnyRef]]] = {
@@ -58,6 +58,8 @@ trait ScriptEventLoop {
 
     result.onComplete(_ => {
       timeoutExecutor ! PoisonPill
+      scriptContext.removeAttribute("__play_webpack_setTimeout", ScriptContext.ENGINE_SCOPE)
+      scriptContext.removeAttribute("__play_webpack_clearTimeout", ScriptContext.ENGINE_SCOPE)
     })
 
     result
