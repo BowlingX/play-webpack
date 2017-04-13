@@ -1,15 +1,18 @@
 package com.bowlingx
 
-import java.util.function.Consumer
-import javax.script._
+import java.io.ByteArrayInputStream
+import java.nio.charset.StandardCharsets
 
 import akka.actor.ActorSystem
+import com.bowlingx.actors.{Answer, Render}
 import com.bowlingx.providers.ScriptResources
-import jdk.nashorn.api.scripting.{JSObject, ScriptObjectMirror}
 import play.api.inject.ApplicationLifecycle
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
+import akka.pattern.ask
+import akka.util.Timeout
+import scala.concurrent.duration._
 
 /**
   * Renders JavaScript with the nashorn engine.
@@ -22,43 +25,51 @@ class JavascriptEngine(
                         val actorSystem: ActorSystem,
                         val lifecycle: ApplicationLifecycle,
                         watchFiles: Boolean
-                      )(implicit context: ExecutionContext) extends Engine with ScriptEventLoop with EngineWatcher {
+                      )(implicit context: ExecutionContext) extends Engine with EngineWatcher {
 
   if (watchFiles) {
     this.initScheduling()
   }
 
-  def render[T <: Any](method: String, arguments: T*): Future[Try[Option[AnyRef]]] = {
-    // Make sure we work in a different context to prevent issues with other threads
-    val scriptContext = new SimpleScriptContext()
-    scriptContext.setBindings(engine.createBindings(), ScriptContext.ENGINE_SCOPE)
-    createEventLoop(scriptContext, promises => {
-      compiledScript.eval(scriptContext)
-      val result = Try {
-        val global = scriptContext.getAttribute("window")
-        compiledScript.getEngine.asInstanceOf[Invocable].invokeMethod(global, method, arguments.map(_.asInstanceOf[Object]): _*)
-      } map { // scalastyle:ignore
-        case result: ScriptObjectMirror if result.hasMember("then") =>
-          val promise = Promise[AnyRef]()
-          result.callMember("then", new Consumer[AnyRef] {
-            override def accept(t: AnyRef): Unit = {
-              promise.success(t)
-              ()
-            }
-          }, new Consumer[AnyRef] {
-            override def accept(t: AnyRef): Unit = {
-              promise.failure(new RuntimeException(s"Promise failed with message: '${t.toString}'"))
-              ()
-            }
-          })
-          promise.future
-        case anyResult => Future(anyResult)
-      }
-      Future.sequence(promises.map(_._3)).flatMap(_ => result match {
-        case Success(future) => future.map(r => Success(Option(r)))
-        case Failure(any) => Future(Failure(any))
-      })
+  /**
+    * @return js to bootstrap the VM with
+    */
+  protected def bootstrap: ByteArrayInputStream = {
+    val pre =
+      """
+        |var global = global || this, self = self || this, window = window || this;
+        |var console = {};
+        |console.debug = print;
+        |console.warn = print;
+        |console.error = print;
+        |console.log = print;
+        |console.trace = print;
+        |
+        |global.setTimeout = function(fn, delay) {
+        |  return __play_webpack_setTimeout.apply(fn, delay || 0);
+        |};
+        |
+        |global.clearTimeout = function(timer) {
+        |  return __play_webpack_clearTimeout.apply(timer);
+        |};
+        |
+        |global.setImmediate = function(fn) {
+        |  return __play_webpack_setTimeout.apply(fn, 0);
+        |};
+        |
+        |global.clearImmediate = function(timer) {
+        |  return __play_webpack_clearTimeout.apply(timer);
+        |};
+      """
+        .stripMargin
+    new ByteArrayInputStream(pre.getBytes(StandardCharsets.UTF_8))
+  }
 
-    })
+  def render[T <: Any](method: String, arguments: T*): Future[Try[Option[AnyRef]]] = {
+    implicit val timeout = Timeout(1.minute)
+
+    renderer ? Render(method, arguments.toList) flatMap {
+      case Answer(response) => response
+    }
   }
 }
