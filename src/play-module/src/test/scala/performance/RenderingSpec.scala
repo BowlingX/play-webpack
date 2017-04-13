@@ -24,7 +24,7 @@ class RenderingSpec extends PlaySpec with GuiceOneAppPerTest with FutureAwaits w
       val promises = Future.sequence(1 to 50 map { unit =>
         val start = System.nanoTime()
         engine.render("testPerformance") map { r =>
-         System.nanoTime() - start) / 1000000
+          (System.nanoTime() - start) / 1000000
         }
       })
 
