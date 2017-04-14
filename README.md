@@ -19,11 +19,11 @@ with the build-in `nashorn` script engine.
 
 Create a file in ~/project/play-webpack.sbt
 
-    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.5")
+    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.6")
     
 Add the following dependencies:
     
-    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.5"
+    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.6"
 
 The plugin will convert a webpack JSON manifest file (generated with https://github.com/kossnocorp/assets-webpack-plugin) to a scala object 
 that can be used directly in play templates for example. The plugin is theoretically not limited to play. 
@@ -87,6 +87,15 @@ The plugin defines the following configuration (your `application.conf`):
       publicPath = "/assets/compiled"
       # The path where they are stored relative to project root
       serverPath = "/public/compiled"
+      
+      rendering {
+          timeout = 1minute
+          renderers {
+            prod = 5
+            dev = 1
+            test = 1
+          }
+        }
     }
     
 The default path of the manifest file (relative to project root) (in your `build.sbt`)
@@ -110,6 +119,26 @@ After enabling the module in you `application.conf`, you can hook up your contro
     }
 
 See a full example in `src/play-module/src/test`.
+
+**Important: Prevent modifying the global state of the JavaScript environment.**
+Due to performance reasons, contexts are reused and any changes are persisted inside the engine if you do so.
+To prevent memory leaks keep your methods pure.
+
+You can configure the number of rendering actors in `webpack.rendering.renderers`:
+
+```
+rendering {
+    timeout = 1minute
+    renderers {
+      prod = 5
+      dev = 1
+      test = 1
+    }
+  }
+```
+
+The more renderers you setup, the more requests you can handle. 
+It defaults to 1 in tests and dev to speed up the init process.
 
 ## Promises
 
