@@ -21,63 +21,64 @@
       <excludeFolder url="file://$MODULE_DIR$/../../src/sbt-plugin/target/resolution-cache" />
       <excludeFolder url="file://$MODULE_DIR$/../../src/sbt-plugin/target/scala-2.10" />
       <excludeFolder url="file://$MODULE_DIR$/../../src/sbt-plugin/target/scala-2.11" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/sbt-plugin/target/scala-2.12" />
       <excludeFolder url="file://$MODULE_DIR$/../../src/sbt-plugin/target/streams" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="SBT: com.jcraft:jsch:0.1.50:jar" level="project" />
-    <orderEntry type="module" module-name="play-webpack-lib" exported="" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.json4s:json4s-core_2.10:3.2.10:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.json4s:json4s-ast_2.10:3.2.10:jar" level="project" />
-    <orderEntry type="library" name="SBT: io.spray:spray-json_2.10:1.3.3:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: com.thoughtworks.paranamer:paranamer:2.6:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang:scala-reflect:2.10.6:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.10.6:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang:scala-compiler:2.10.6:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: jline:jline:2.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.fusesource.jansi:jansi:1.11:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang.modules:scala-pickling_2.10:0.10.1:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:actions:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:api:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:apply-macro:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:cache:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:classfile:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:classpath:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:collections:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:command:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compile:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compiler-integration:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compiler-interface:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compiler-ivy-integration:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:completion:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:control:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:cross:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:incremental-compiler:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:interface:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:io:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:ivy:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:launcher-interface:1.0.0-M1:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:logging:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:logic:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:main:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:main-settings:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:persist:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:process:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:relation:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:run:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:sbt:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:serialization_2.10:0.1.2:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:task-system:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:tasks:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:template-resolver:0.1:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:test-agent:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:test-interface:1.0:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:testing:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:tracking:0.13.13:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt.ivy:ivy:2.3.0-sbt-2cf13e211b2cb31f0d3b317289dca70eca3362f6:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-tools.sbinary:sbinary_2.10:0.4.2:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scalamacros:quasiquotes_2.10:2.0.1:jar" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="SBT: org.spire-math:jawn-parser_2.10:0.6.0:jar" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="SBT: org.spire-math:json4s-support_2.10:0.6.0:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.spire-math:jawn-parser_2.10:0.6.0:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scalamacros:quasiquotes_2.10:2.0.1:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-tools.sbinary:sbinary_2.10:0.4.2:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt.ivy:ivy:2.3.0-sbt-2cf13e211b2cb31f0d3b317289dca70eca3362f6:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:tracking:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:testing:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:test-interface:1.0:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:test-agent:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:template-resolver:0.1:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:tasks:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:task-system:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:serialization_2.10:0.1.2:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:sbt:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:run:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:relation:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:process:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:persist:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:main-settings:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:main:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:logic:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:logging:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:launcher-interface:1.0.0-M1:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:ivy:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:io:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:interface:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:incremental-compiler:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:cross:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:control:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:completion:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compiler-ivy-integration:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compiler-interface:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compiler-integration:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:compile:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:command:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:collections:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:classpath:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:classfile:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:cache:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:apply-macro:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:api:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-sbt:actions:0.13.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang.modules:scala-pickling_2.10:0.10.1:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.fusesource.jansi:jansi:1.11:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: jline:jline:2.13:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang:scala-compiler:2.10.6:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.10.6:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang:scala-reflect:2.10.6:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: com.thoughtworks.paranamer:paranamer:2.6:jar" level="project" />
+    <orderEntry type="library" name="SBT: io.spray:spray-json_2.10:1.3.3:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.json4s:json4s-ast_2.10:3.2.10:jar" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="SBT: org.json4s:json4s-core_2.10:3.2.10:jar" level="project" />
+    <orderEntry type="module" module-name="play-webpack-lib" exported="" />
   </component>
 </module>
