@@ -14,7 +14,7 @@ case class Render[T](method: String, args: List[T])
 case class Answer(answer: Try[Option[AnyRef]])
 case class UpdatedScript(compiledScript: CompiledScript)
 
-class RenderActor(compiledScript: CompiledScript) extends Actor {
+class RenderActor(compiledScript: CompiledScript, timeout:FiniteDuration) extends Actor {
 
   implicit private val thisContext = context.system.dispatcher
   private var scriptContext : ScriptContext = createScriptContext(compiledScript)
@@ -82,7 +82,7 @@ class RenderActor(compiledScript: CompiledScript) extends Actor {
 
       // the actor has to block for the result to prevent more executions
       // in the same context of the script engine
-      val answer = Await.result(response, 10.seconds)
+      val answer = Await.result(response, timeout)
 
       sender ! Answer(answer)
 

@@ -25,6 +25,7 @@ trait EngineWatcher {
   val actorSystem: ActorSystem
   val lifecycle: ApplicationLifecycle
   val renderInstances:Int
+  val renderTimeout:FiniteDuration
 
   protected def bootstrap: ByteArrayInputStream
 
@@ -34,7 +35,7 @@ trait EngineWatcher {
 
   def createRenderer(compiledScript:CompiledScript) : ActorRef = {
     actorSystem.actorOf(Props(
-      new RenderActor(compiledScript)).withRouter(RoundRobinPool(renderInstances)))
+      new RenderActor(compiledScript, renderTimeout)).withRouter(RoundRobinPool(renderInstances)))
   }
 
   protected def createCompiledScripts(): CompiledScript = {
