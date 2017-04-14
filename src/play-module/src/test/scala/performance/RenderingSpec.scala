@@ -9,9 +9,7 @@ import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Success
-/**
-  * Created by bowlingx on 13.04.17.
-  */
+
 class RenderingSpec extends PlaySpec with GuiceOneAppPerTest with FutureAwaits with DefaultAwaitTimeout {
 
   implicit override def defaultAwaitTimeout: Timeout = 1.minutes
