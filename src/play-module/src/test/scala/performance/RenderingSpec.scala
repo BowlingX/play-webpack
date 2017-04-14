@@ -2,7 +2,6 @@ package performance
 
 import akka.util.Timeout
 import com.bowlingx.Engine
-import jdk.nashorn.api.scripting.ScriptObjectMirror
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}

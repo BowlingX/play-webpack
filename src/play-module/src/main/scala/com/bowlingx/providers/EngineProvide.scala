@@ -5,21 +5,32 @@ import javax.inject.{Inject, Provider}
 
 import akka.actor.ActorSystem
 import com.bowlingx.{Engine, JavascriptEngine}
-import play.api.Environment
+import play.api.{Configuration, Environment}
 import play.api.inject.ApplicationLifecycle
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.FiniteDuration
 
 case class ScriptResources(resources: Seq[URL])
 
 class EngineProvide(resources: ScriptResources) extends Provider[Engine] {
 
   @Inject() implicit var executionContext: ExecutionContext = _
-  @Inject() var actorSystem:ActorSystem = _
-  @Inject() var lifecycle:ApplicationLifecycle = _
-  @Inject() var env:Environment = _
+  @Inject() var actorSystem: ActorSystem = _
+  @Inject() var lifecycle: ApplicationLifecycle = _
+  @Inject() var env: Environment = _
+  @Inject() var config: Configuration = _
 
   override def get(): Engine = {
-    new JavascriptEngine(resources, actorSystem, lifecycle, env.mode == play.api.Mode.Dev)
+    val timeout = config.get[FiniteDuration]("webpack.rendering.timeout")
+    val mode = env.mode match {
+      case play.api.Mode.Dev => "dev"
+      case play.api.Mode.Test => "test"
+      case _ => "prod"
+    }
+    val renderInstances = config.get[Int](s"webpack.rendering.renderers.$mode")
+    new JavascriptEngine(
+      resources, actorSystem, lifecycle, env.mode == play.api.Mode.Dev, timeout, renderInstances
+    )
   }
 }

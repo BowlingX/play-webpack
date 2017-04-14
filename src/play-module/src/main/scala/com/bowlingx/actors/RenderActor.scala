@@ -11,19 +11,18 @@ import scala.concurrent.{Await, Future, Promise}
 import scala.util.{Failure, Success, Try}
 
 case class Render[T](method: String, args: List[T])
-case class Answer(answer: Future[Try[Option[AnyRef]]])
+case class Answer(answer: Try[Option[AnyRef]])
+case class UpdatedScript(compiledScript: CompiledScript)
 
 class RenderActor(compiledScript: CompiledScript) extends Actor {
 
   implicit private val thisContext = context.system.dispatcher
-  private val scriptContext = new SimpleScriptContext()
-  scriptContext.setBindings(compiledScript.getEngine.createBindings(), ScriptContext.ENGINE_SCOPE)
-  compiledScript.eval(scriptContext)
+  private var scriptContext : ScriptContext = createScriptContext(compiledScript)
 
   private val cancels = collection.mutable.ArrayBuffer[(Cancellable, Promise[Boolean], Future[Boolean])]()
   private val timeoutExecutor = context.actorOf(Props[ExecutorActor])
 
-  private val setTimeout = (function: JSObject, delay: Int) => {
+  private lazy val setTimeout = (function: JSObject, delay: Int) => {
     val promise = Promise[Boolean]()
     val cancelable = context.system.scheduler.scheduleOnce(delay.milliseconds) {
       timeoutExecutor ! (function -> promise)
@@ -32,15 +31,22 @@ class RenderActor(compiledScript: CompiledScript) extends Actor {
     (cancels += Tuple3(cancelable, promise, promise.future)).size
   }: Int
 
-  private val clearTimeout = (timer: Int) => {
+  private lazy val clearTimeout = (timer: Int) => {
     val (cancel, promise, _) = cancels(timer - 1)
     cancel.cancel()
     promise.success(false)
   }
 
-  scriptContext.setAttribute("__play_webpack_setTimeout", setTimeout, ScriptContext.ENGINE_SCOPE)
-  scriptContext.setAttribute("__play_webpack_clearTimeout", clearTimeout, ScriptContext.ENGINE_SCOPE)
+  private def createScriptContext(compiledScript: CompiledScript) = {
+    val context = new SimpleScriptContext()
+    context.setBindings(compiledScript.getEngine.createBindings(), ScriptContext.ENGINE_SCOPE)
+    compiledScript.eval(context)
 
+    context.setAttribute("__play_webpack_setTimeout", setTimeout, ScriptContext.ENGINE_SCOPE)
+    context.setAttribute("__play_webpack_clearTimeout", clearTimeout, ScriptContext.ENGINE_SCOPE)
+
+    context
+  }
 
   override def receive: Receive = {
     case Render(method, args) =>
@@ -73,11 +79,16 @@ class RenderActor(compiledScript: CompiledScript) extends Actor {
       response onComplete { _ =>
         cancels.clear()
       }
-      sender ! Answer(response)
 
-      // the actor has to wait for the result to prevent executing in the same context.
-      Await.result(response, 10.seconds)
-      ()
+      // the actor has to block for the result to prevent more executions
+      // in the same context of the script engine
+      val answer = Await.result(response, 10.seconds)
+
+      sender ! Answer(answer)
+
+    case UpdatedScript(script) =>
+      scriptContext = createScriptContext(script)
+
   }
 
   override def postStop(): Unit = {

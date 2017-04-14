@@ -7,18 +7,16 @@ import javax.script.{Compilable, CompiledScript, ScriptEngine}
 
 import akka.actor.{ActorRef, ActorSystem, PoisonPill, Props}
 import akka.routing.{Broadcast, RoundRobinPool}
-import com.bowlingx.actors.RenderActor
+import com.bowlingx.actors.{RenderActor, UpdatedScript}
 import com.bowlingx.providers.ScriptResources
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
-import akka.pattern.ask
-import akka.util.Timeout
 
 trait EngineWatcher {
 
@@ -26,21 +24,17 @@ trait EngineWatcher {
   protected val vendorFiles: ScriptResources
   val actorSystem: ActorSystem
   val lifecycle: ApplicationLifecycle
+  val renderInstances:Int
 
   protected def bootstrap: ByteArrayInputStream
 
   val logger = Logger(this.getClass)
-  implicit private[this] val timeout = Timeout(10.seconds)
 
-  @volatile
-  protected var compiledScript: CompiledScript = createCompiledScripts()
-
-  @volatile
-  protected var renderer: ActorRef = createRenderer(compiledScript)
+  protected var renderer: ActorRef = createRenderer(createCompiledScripts())
 
   def createRenderer(compiledScript:CompiledScript) : ActorRef = {
     actorSystem.actorOf(Props(
-      new RenderActor(compiledScript)).withRouter(RoundRobinPool(1)))
+      new RenderActor(compiledScript)).withRouter(RoundRobinPool(renderInstances)))
   }
 
   protected def createCompiledScripts(): CompiledScript = {
@@ -71,10 +65,7 @@ trait EngineWatcher {
               val file = event.context().asInstanceOf[Path].toString
               if (fileNamesAllowedToTriggerChange.contains(file)) {
                 logger.info(s"Bundle source file `$file` changed, recompiling...")
-                renderer ? Broadcast(PoisonPill) foreach { _ =>
-                  compiledScript = createCompiledScripts()
-                  renderer = createRenderer(compiledScript)
-                }
+                renderer ! Broadcast(UpdatedScript(createCompiledScripts()))
               }
             }
           })
@@ -83,10 +74,10 @@ trait EngineWatcher {
       })
     }
 
-    lifecycle.addStopHook(() => {
+    lifecycle.addStopHook(() => Future {
       watch.close()
       scheduler.cancel()
-      renderer ? Broadcast(PoisonPill)
+      renderer ! Broadcast(PoisonPill)
     })
   }
 

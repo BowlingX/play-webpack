@@ -24,7 +24,9 @@ class JavascriptEngine(
                         val vendorFiles: ScriptResources,
                         val actorSystem: ActorSystem,
                         val lifecycle: ApplicationLifecycle,
-                        watchFiles: Boolean
+                        watchFiles: Boolean,
+                        val renderTimeout:FiniteDuration,
+                        val renderInstances:Int
                       )(implicit context: ExecutionContext) extends Engine with EngineWatcher {
 
   if (watchFiles) {
@@ -66,9 +68,9 @@ class JavascriptEngine(
   }
 
   def render[T <: Any](method: String, arguments: T*): Future[Try[Option[AnyRef]]] = {
-    implicit val timeout = Timeout(1.minute)
+    implicit val timeout = Timeout(renderTimeout)
 
-    renderer ? Render(method, arguments.toList) flatMap {
+    renderer ? Render(method, arguments.toList) map {
       case Answer(response) => response
     }
   }

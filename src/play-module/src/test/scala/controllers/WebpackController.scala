@@ -10,7 +10,8 @@ import scala.util.{Failure, Success}
 
 @Singleton
 class WebpackController @Inject()
-(engine: Engine, components: ControllerComponents)(implicit context:ExecutionContext) extends AbstractController(components) {
+(engine: Engine, components: ControllerComponents)
+(implicit context: ExecutionContext) extends AbstractController(components) {
 
   def index: Action[AnyContent] = Action.async {
     engine.render("render") map {
@@ -27,5 +28,4 @@ class WebpackController @Inject()
       case _ => NotFound
     }
   }
-
 }
