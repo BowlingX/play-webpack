@@ -12,7 +12,7 @@ import javax.inject.Singleton
 import scala.util.Try
 import scala.util.matching.Regex
 
-class PlayWebpackModule extends Module {
+class WebpackModule extends Module {
 
   val URL_MATCH: Regex = "(https?:\\/\\/)".r
 
@@ -127,6 +127,6 @@ class PlayWebpackModule extends Module {
 
   def replacePublicPath(filePath: String, publicPath: String): String = {
     val actualPath = URL_MATCH.findFirstIn(filePath).map(new URL(_).getPath).getOrElse(filePath)
-    Paths.get(actualPath).relativize(Paths.get(filePath)).toString
+    Paths.get(publicPath).relativize(Paths.get(actualPath)).toString
   }
 }
