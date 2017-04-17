@@ -10,8 +10,11 @@ import play.api.inject.{Binding, Module}
 import javax.inject.Singleton
 
 import scala.util.Try
+import scala.util.matching.Regex
 
-class ReactModule extends Module {
+class PlayWebpackModule extends Module {
+
+  val URL_MATCH: Regex = "(https?:\\/\\/)".r
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
     val logger = Logger(this.getClass)
@@ -32,7 +35,8 @@ class ReactModule extends Module {
 
     val prependedBundles = configuration.getOptional[Seq[String]]("webpack.prependBundles").map(list =>
       publicToServerEntry.map(entry => entry.entries.filter { case (index, _) =>
-       list.contains(index)}.toSeq.sortBy { case(index, _) => list.indexOf(index) }
+        list.contains(index)
+      }.toSeq.sortBy { case (index, _) => list.indexOf(index) }
       ).getOrElse(Seq.empty)
     ).getOrElse(Seq.empty)
 
@@ -122,6 +126,7 @@ class ReactModule extends Module {
   }
 
   def replacePublicPath(filePath: String, publicPath: String): String = {
-    Paths.get(publicPath).relativize(Paths.get(filePath)).toString
+    val actualPath = URL_MATCH.findFirstIn(filePath).map(new URL(_).getPath).getOrElse(filePath)
+    Paths.get(actualPath).relativize(Paths.get(filePath)).toString
   }
 }
