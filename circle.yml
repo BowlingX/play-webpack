@@ -1,6 +1,7 @@
 machine:
   environment:
-    SBT_OPTS: "-XX:+CMSClassUnloadingEnabled -Xms4072m -Xmx4072m -XX:ReservedCodeCacheSize=512m -Dfile.encoding=UTF8"
+    SBT_VERSION: 0.13.15
+    SBT_OPTS: "-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M"
     KEYSTORE_DIR: ${HOME}/.gnupg
   java:
     version: oraclejdk8
@@ -9,6 +10,16 @@ dependencies:
   override:
     - bash ./scripts/download_pgp_key.sh
     - cat /dev/null | sbt +test:compile
+  cache_directories:
+    - "~/.sbt"
+  pre:
+    - wget --output-document=$HOME/bin/sbt-launch.jar
+      https://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/"$SBT_VERSION"/sbt-launch.jar
+    - echo "java $SBT_OPTS -jar \`dirname \$0\`/sbt-launch.jar \"\$@\""
+      > $HOME/bin/sbt
+    - chmod u+x $HOME/bin/sbt
+    - which sbt
+    - sbt sbt-version
 
 test:
   override:
