@@ -82,9 +82,9 @@ class RenderActor(compiledScript: CompiledScript, timeout:FiniteDuration) extend
 
       // the actor has to block for the result to prevent more executions
       // in the same context of the script engine
-      val answer = Await.result(response, timeout)
+      val awaitedResult = Await.result(response, timeout)
+      sender ! Answer(awaitedResult)
 
-      sender ! Answer(answer)
 
     case UpdatedScript(script) =>
       scriptContext = createScriptContext(script)

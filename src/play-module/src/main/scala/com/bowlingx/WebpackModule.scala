@@ -126,7 +126,10 @@ class WebpackModule extends Module {
   }
 
   def replacePublicPath(filePath: String, publicPath: String): String = {
-    val actualPath = URL_MATCH.findFirstIn(filePath).map(new URL(_).getPath).getOrElse(filePath)
-    Paths.get(publicPath).relativize(Paths.get(actualPath)).toString
+    val actualPath = URL_MATCH.findFirstIn(filePath).map { _ =>
+      val actualUrl = new URL(filePath)
+      Paths.get(actualUrl.getPath)
+    }.getOrElse(Paths.get(filePath))
+    Paths.get(publicPath).relativize(actualPath).toString
   }
 }

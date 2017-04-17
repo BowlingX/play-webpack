@@ -68,7 +68,7 @@ object PlayWebpackBuild {
       scalaVersion := scala212Version,
       crossScalaVersions := Seq(scala212Version, scala211Version),
       libraryDependencies += filters,
-      libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0-M2" % Test,
+      libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0-M3" % Test,
       sourceGenerators in Test += task[Seq[File]] {
         val file = (sourceManaged in Test).value / "com" / "bowlingx" / "webpack" / "Manifest.scala"
         val code =
@@ -76,7 +76,7 @@ object PlayWebpackBuild {
              |package com.bowlingx.webpack
              |
              |object WebpackManifest extends WebpackManifestType {
-             |  val entries:Map[String, WebpackEntry] = Map("vendor" -> WebpackEntry(Some("/assets/scripts/vendor.js"), None), "polyfills" -> WebpackEntry(Some("/assets/scripts/polyfills.js"), None), "server" -> WebpackEntry(Some("/assets/scripts/server.js"), None))
+             |  val entries:Map[String, WebpackEntry] = Map("vendor" -> WebpackEntry(Some("https://localhost:8080/assets/scripts/vendor.js"), None), "polyfills" -> WebpackEntry(Some("/assets/scripts/polyfills.js"), None), "server" -> WebpackEntry(Some("/assets/scripts/server.js"), None))
              |}
      """.stripMargin
         IO write(file, code)

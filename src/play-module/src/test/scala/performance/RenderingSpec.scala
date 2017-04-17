@@ -8,7 +8,7 @@ import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 class RenderingSpec extends PlaySpec with GuiceOneAppPerTest with FutureAwaits with DefaultAwaitTimeout {
 
@@ -28,6 +28,15 @@ class RenderingSpec extends PlaySpec with GuiceOneAppPerTest with FutureAwaits w
 
       val result = await(promises)
       result.size mustBe 50
+    }
+  }
+
+  "Render something undefined" should {
+    "be a Failure" in {
+      val engine = app.injector.instanceOf[Engine]
+      val promise = engine.render("somethingNotDefined")
+      val result = await(promise)
+      result mustBe a[Failure[_]]
     }
   }
 }
