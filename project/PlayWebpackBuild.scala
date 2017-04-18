@@ -76,7 +76,11 @@ object PlayWebpackBuild {
              |package com.bowlingx.webpack
              |
              |object WebpackManifest extends WebpackManifestType {
-             |  val entries:Map[String, WebpackEntry] = Map("vendor" -> WebpackEntry(Some("https://localhost:8080/assets/scripts/vendor.js"), None), "polyfills" -> WebpackEntry(Some("/assets/scripts/polyfills.js"), None), "server" -> WebpackEntry(Some("/assets/scripts/server.js"), None))
+             |  val entries:Map[String, WebpackEntry] = Map(
+             |  "vendor" -> WebpackEntry(Some("https://localhost:8080/assets/scripts/vendor.js"), None),
+             |  "polyfills" -> WebpackEntry(Some("/assets/scripts/polyfills.js"), None),
+             |  "server" -> WebpackEntry(Some("/assets/scripts/server.js"), None)
+             |  )
              |}
      """.stripMargin
         IO write(file, code)

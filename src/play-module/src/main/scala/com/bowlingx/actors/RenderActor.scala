@@ -72,7 +72,9 @@ class RenderActor(compiledScript: CompiledScript, timeout:FiniteDuration) extend
         case anyResult => Future(anyResult)
       }
 
-      val response = Future.sequence(cancels.map(_._3)).flatMap(_ => result match {
+      val response = Future.sequence(cancels.map {
+        case (_, _, future) => future
+      }).flatMap(_ => result match {
         case Success(future) => future.map(r => Success(Option(r)))
         case Failure(any) => Future(Failure(any))
       })
