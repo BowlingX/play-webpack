@@ -12,18 +12,18 @@ with the build-in `nashorn` script engine.
 
 - JDK 8
 - scala 2.11 or scala 2.12
-- play 2.6
+- play 2.6 (M5)
 - webpack or anything the generates a JSON file like the one below
 
 ## Setup
 
 Create a file in ~/project/play-webpack.sbt
 
-    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.8")
+    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.9")
     
 Add the following dependencies:
     
-    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.8"
+    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.9"
 
 The plugin will convert a webpack JSON manifest file (generated with https://github.com/kossnocorp/assets-webpack-plugin) to a scala object 
 that can be used directly in play templates for example. The plugin is theoretically not limited to play. 
