@@ -5,6 +5,7 @@ import javax.script.{CompiledScript, Invocable, ScriptContext, SimpleScriptConte
 
 import akka.actor.{Actor, Cancellable, PoisonPill, Props}
 import jdk.nashorn.api.scripting.{JSObject, ScriptObjectMirror}
+import play.api.Logger
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future, Promise}
@@ -31,6 +32,8 @@ class RenderActor(compiledScript: CompiledScript, timeout:FiniteDuration) extend
     (cancels += Tuple3(cancelable, promise, promise.future)).size
   }: Int
 
+  private lazy val logger: Logger = Logger(this.getClass)
+
   private lazy val clearTimeout = (timer: Int) => {
     val (cancel, promise, _) = cancels(timer - 1)
     cancel.cancel()
@@ -40,10 +43,11 @@ class RenderActor(compiledScript: CompiledScript, timeout:FiniteDuration) extend
   private def createScriptContext(compiledScript: CompiledScript) = {
     val context = new SimpleScriptContext()
     context.setBindings(compiledScript.getEngine.createBindings(), ScriptContext.ENGINE_SCOPE)
-    compiledScript.eval(context)
-
+    context.setAttribute("__play_webpack_logger", logger.logger, ScriptContext.ENGINE_SCOPE)
     context.setAttribute("__play_webpack_setTimeout", setTimeout, ScriptContext.ENGINE_SCOPE)
     context.setAttribute("__play_webpack_clearTimeout", clearTimeout, ScriptContext.ENGINE_SCOPE)
+
+    compiledScript.eval(context)
 
     context
   }

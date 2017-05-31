@@ -68,7 +68,7 @@ object PlayWebpackBuild {
       scalaVersion := scala212Version,
       crossScalaVersions := Seq(scala212Version, scala211Version),
       libraryDependencies += filters,
-      libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0-M3" % Test,
+      libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0-RC1" % Test,
       sourceGenerators in Test += task[Seq[File]] {
         val file = (sourceManaged in Test).value / "com" / "bowlingx" / "webpack" / "Manifest.scala"
         val code =
