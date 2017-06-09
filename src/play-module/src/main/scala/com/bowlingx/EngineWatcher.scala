@@ -14,7 +14,7 @@ import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 
@@ -33,15 +33,17 @@ trait EngineWatcher {
 
   protected var renderer: ActorRef = createRenderer(createCompiledScripts())
 
-  def createRenderer(compiledScript:CompiledScript) : ActorRef = {
+  def createRenderer(compiledScript:Try[CompiledScript]) : ActorRef = {
     actorSystem.actorOf(Props(
       new RenderActor(compiledScript, renderTimeout)).withRouter(RoundRobinPool(renderInstances)))
   }
 
-  protected def createCompiledScripts(): CompiledScript = {
-    engine.asInstanceOf[Compilable].compile(new InputStreamReader(new SequenceInputStream(
-      util.Collections.enumeration((bootstrap +: vendorFiles.resources.map(_.openStream())).asJava)
-    )))
+  protected def createCompiledScripts(): Try[CompiledScript] = {
+    Try {
+      engine.asInstanceOf[Compilable].compile(new InputStreamReader(new SequenceInputStream(
+        util.Collections.enumeration((bootstrap +: vendorFiles.resources.map(_.openStream())).asJava)
+      )))
+    }
   }
 
   protected def initScheduling()(implicit context: ExecutionContext): Unit = {
@@ -66,7 +68,12 @@ trait EngineWatcher {
               val file = event.context().asInstanceOf[Path].toString
               if (fileNamesAllowedToTriggerChange.contains(file)) {
                 logger.info(s"Bundle source file `$file` changed, recompiling...")
-                renderer ! Broadcast(UpdatedScript(createCompiledScripts()))
+                createCompiledScripts() match {
+                  case Success(script) =>
+                    renderer ! Broadcast(UpdatedScript(script))
+                  case Failure(ex) =>
+                    logger.error("Fatal: Got Exception during script compile", ex)
+                }
               }
             }
           })
