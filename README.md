@@ -8,6 +8,8 @@ play-webpack
 This play module will add support for `webpack` and server-side rendering of javascript 
 with the build-in `nashorn` script engine.
 
+Example Project: https://github.com/BowlingX/play-webpack-example
+
 ## Requirements
 
 - JDK 8
@@ -163,8 +165,6 @@ Supported Libraries (tested by the Author)
 
 - reactjs
 - react-apollo (https://github.com/apollographql/react-apollo)
-
-Sample integration Demo with apollo and sangria (http://sangria-graphql.org/) is on it's way.
 
 ## Workflow
 
