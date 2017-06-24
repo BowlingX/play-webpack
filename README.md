@@ -14,18 +14,18 @@ Example Project: https://github.com/BowlingX/play-webpack-example
 
 - JDK 8
 - scala 2.11 or scala 2.12
-- play 2.6 (RC1)
+- play 2.6
 - webpack or anything the generates a JSON file like the one below
 
 ## Setup
 
 Create a file in ~/project/play-webpack.sbt
 
-    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.11")
+    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.12")
     
 Add the following dependencies:
     
-    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.11"
+    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.12"
 
 The plugin will convert a webpack JSON manifest file (generated with https://github.com/kossnocorp/assets-webpack-plugin) to a scala object 
 that can be used directly in play templates for example. The plugin is theoretically not limited to play. 
