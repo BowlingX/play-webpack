@@ -90,7 +90,7 @@ class RenderActor(compiledScript: Try[CompiledScript], timeout:FiniteDuration) e
 
       // the actor has to block for the result to prevent more executions
       // in the same context of the script engine
-      val awaitedResult = Await.result(response, timeout)
+      val awaitedResult = Await.ready(response, timeout).value.get.flatten
       sender ! Answer(awaitedResult)
 
 
