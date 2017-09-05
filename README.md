@@ -6,7 +6,7 @@ play-webpack
 [![Maven Central](https://img.shields.io/maven-central/v/com.bowlingx/play-webpack_2.12.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22play-webpack_2.12%22)
 
 This play module will add support for `webpack` and server-side rendering of javascript 
-with the build-in `nashorn` script engine.
+with the built-in `nashorn` script engine.
 
 Example Project: https://github.com/BowlingX/play-webpack-example
 
