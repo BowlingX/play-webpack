@@ -23,14 +23,16 @@ class EngineProvide(resources: ScriptResources) extends Provider[Engine] {
 
   override def get(): Engine = {
     val timeout = config.get[FiniteDuration]("webpack.rendering.timeout")
+    val isWatchForcedDisabled = config.get[Boolean]("webpack.rendering.forceDisableWatch")
     val mode = env.mode match {
       case play.api.Mode.Dev => "dev"
       case play.api.Mode.Test => "test"
       case _ => "prod"
     }
     val renderInstances = config.get[Int](s"webpack.rendering.renderers.$mode")
+    val watchMode = !isWatchForcedDisabled && env.mode == play.api.Mode.Dev
     new JavascriptEngine(
-      resources, actorSystem, lifecycle, env.mode == play.api.Mode.Dev, timeout, renderInstances
+      resources, actorSystem, lifecycle, watchMode, timeout, renderInstances
     )
   }
 }

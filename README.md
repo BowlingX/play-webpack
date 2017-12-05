@@ -91,6 +91,7 @@ The plugin defines the following configuration (your `application.conf`):
       serverPath = "/public/compiled"
       
       rendering {
+          forceDisableWatch = false
           timeout = 1minute
           renderers {
             prod = 5
@@ -130,6 +131,7 @@ You can configure the number of rendering actors in `webpack.rendering.renderers
 
 ```
 rendering {
+    forceDisableWatch = false
     timeout = 1minute
     renderers {
       prod = 5
@@ -168,6 +170,7 @@ Supported Libraries (tested by the Author)
 
 ## Workflow
 
-Any file changes (including the manifest file) are picked up automatically and a recompilation is triggered, 
+Any file changes in dev mode (including the manifest file) are picked up automatically and a recompilation is triggered, 
 so the normal "change and reload" cycle that leads to a faster development experience is kept.
 
+You can force to disable watch mode in dev mode by setting `webpack.rendering.forceDisableWatch` to true.
