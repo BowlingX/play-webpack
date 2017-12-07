@@ -8,7 +8,7 @@ import jdk.nashorn.api.scripting.{JSObject, ScriptObjectMirror}
 import play.api.Logger
 
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future, Promise}
+import scala.concurrent.{Await, ExecutionContextExecutor, Future, Promise}
 import scala.util.{Failure, Success, Try}
 
 case class Render[T](method: String, args: List[T])
@@ -17,7 +17,7 @@ case class UpdatedScript(compiledScript: CompiledScript)
 
 class RenderActor(compiledScript: Try[CompiledScript], timeout:FiniteDuration) extends Actor {
 
-  implicit private val thisContext = context.system.dispatcher
+  implicit private val thisContext: ExecutionContextExecutor = context.system.dispatcher
   private var scriptContext : ScriptContext = createScriptContext(compiledScript)
 
   private val cancels = collection.mutable.ArrayBuffer[(Cancellable, Promise[Boolean], Future[Boolean])]()
