@@ -5,4 +5,4 @@ libraryDependencies ++= Seq(
   "com.bowlingx" %% "play-webpack-lib" % Option(System.getProperty("plugin.version")).get
 )
 
-webpackManifest := Option(file ("conf/webpack-assets.json"))
+webpackManifest := Seq(file ("conf/webpack-assets.json"))

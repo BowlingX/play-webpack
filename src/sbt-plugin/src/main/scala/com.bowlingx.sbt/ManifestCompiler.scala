@@ -11,13 +11,13 @@ object WebpackEntryProtocol extends DefaultJsonProtocol {
 /**
   * Created by david on 16.01.17.
   */
-private[sbt] case class ManifestCompiler(jsonFile:File) {
+private[sbt] case class ManifestCompiler(jsonFile:Seq[File]) {
 
-  private[this] val string = IO.read(jsonFile)
+  private[this] val files = jsonFile.map(IO.read(_).parseJson)
   def generate(): String = {
     import WebpackEntryProtocol._
 
-    val manifest = string.parseJson.convertTo[Map[String, WebpackEntry]]
+    val manifest = files.flatMap(json => json.convertTo[Map[String, WebpackEntry]]).toMap
     val classString = s"""
        |package com.bowlingx.webpack
        |
