@@ -19,7 +19,7 @@ dependencies:
       > $HOME/bin/sbt
     - chmod u+x $HOME/bin/sbt
     - which sbt
-    - sbt sbt-version
+    - sbt version
 
 test:
   override:
