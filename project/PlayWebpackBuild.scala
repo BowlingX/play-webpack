@@ -38,7 +38,12 @@ object PlayWebpackBuild {
       libraryDependencies ++= Seq(
         "io.spray" %% "spray-json" % "1.3.3"
       )) ++ Seq(
-      crossScalaVersions := Seq(scala210Version)
+      crossSbtVersions := Seq("0.13.16", "1.1.0"),
+      scalaVersion := (CrossVersion partialVersion (sbtVersion in pluginCrossBuild).value match {
+        case Some((0, 13)) => scala210Version
+        case Some((1, _))  => scala212Version
+        case _             => sys error s"Unhandled sbt version ${(sbtVersion in pluginCrossBuild).value}"
+      })
     )
   }
 
