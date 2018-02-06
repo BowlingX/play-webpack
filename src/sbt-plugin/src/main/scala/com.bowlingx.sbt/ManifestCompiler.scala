@@ -31,15 +31,21 @@ private[sbt] case class ManifestCompiler(jsonFile:Seq[File]) {
              """.stripMargin
           }.mkString(",")}
        |)
-       |  ${manifest.map { case (bundle:String, Left(entry)) =>
+       |  ${manifest.map {
+            case (bundle:String, Left(entry)) =>
+                s"""
+                   |
+                   |lazy val `$bundle` = Left(WebpackEntry(
+                   |${entry.js.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")},
+                   |${entry.css.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")}
+                   |))
+                   |
+                   |""".stripMargin
+
+            case (bundle:String, Right(entry)) =>
               s"""
-                 |
-                 |lazy val `$bundle` = Left(WebpackEntry(
-                 |${entry.js.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")},
-                 |${entry.css.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")}
-                 |))
-                 |
-                 |""".stripMargin
+                 |lazy val `$bundle` = Right("$entry")
+               """.stripMargin
           }.mkString("\n")}
        |}
      """.stripMargin

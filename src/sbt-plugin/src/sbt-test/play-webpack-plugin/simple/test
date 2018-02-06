@@ -1,3 +1,0 @@
-# check if the file gets created
-> compile
-$ exists target/scala-2.11/src_managed/main/com/bowlingx/webpack/Manifest.scala

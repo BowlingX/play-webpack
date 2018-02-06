@@ -41,13 +41,6 @@ object PlayWebpackBuild {
       ))
   }
 
-  def scala210Project: Seq[Setting[_]] = {
-    Seq(
-      crossScalaVersions := Seq(scala212Version, scala211Version, scala210Version),
-      scalaVersion := scala212Version
-    )
-  }
-
   def mainSettings: Seq[Setting[_]] = {
     sharedSettings ++ Seq(
       scalacOptions ++= Seq(
