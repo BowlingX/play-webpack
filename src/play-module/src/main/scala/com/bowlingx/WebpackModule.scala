@@ -9,12 +9,14 @@ import play.api.{Configuration, Environment, Logger}
 import play.api.inject.{Binding, Module}
 import javax.inject.Singleton
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 import scala.util.matching.Regex
 
 class WebpackModule extends Module {
 
   val URL_MATCH: Regex = "(https?:\\/\\/)".r
+
+  val logger = Logger(this.getClass)
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
     val logger = Logger(this.getClass)
@@ -60,7 +62,7 @@ class WebpackModule extends Module {
   def createEngines(
                      environment: Environment,
                      publicToServerEntry: Option[WebpackManifestType],
-                     prependedBundles: Seq[(String, WebpackEntryType)]
+                     prependedBundles: Seq[(String, Either[WebpackEntryType, String])]
                    ): Seq[Binding[Engine]] = {
     val engines = publicToServerEntry.map(manifest => {
       manifest.entries.filter(e => !prependedBundles.contains(e)).map { case (index, entry) =>
@@ -80,17 +82,20 @@ class WebpackModule extends Module {
 
   def createVendorResources(
                              environment: Environment,
-                             entry: Option[WebpackEntryType],
-                             prepends: Seq[(String, WebpackEntryType)]
+                             entry: Option[Either[WebpackEntryType, String]],
+                             prepends: Seq[(String, Either[WebpackEntryType, String])]
                            ): Seq[URL] = {
     // we watch the real source in develop, this is faster instead of waiting till other watch processes copy the file to resources
-    val preSources = prepends.flatMap { case (_, sourceEntry) =>
-      sourceEntry.js.map(
-        r => this.getFileFromResourcesOrProjectPath(environment, r))
+    val preSources = prepends.flatMap {
+      case (_, Right(sourceEntry)) => Some(this.getFileFromResourcesOrProjectPath(environment, sourceEntry))
+      case (_, Left(sourceEntry)) =>
+        sourceEntry.js.map(
+          r => this.getFileFromResourcesOrProjectPath(environment, r))
     }.flatten
-    val entrySource = Seq(entry.flatMap(_.js.flatMap(
-      r => this.getFileFromResourcesOrProjectPath(environment, r)))
-    ).flatten
+    val entrySource = Seq(entry.flatMap {
+      case Left(mapped) => mapped.js.flatMap(r => this.getFileFromResourcesOrProjectPath(environment, r))
+      case Right(flat) => this.getFileFromResourcesOrProjectPath(environment, flat)
+    }).flatten
 
     preSources ++ entrySource
   }
@@ -109,18 +114,25 @@ class WebpackModule extends Module {
     * @param manifest      original manifest
     * @return
     */
-  def mapServerPath(configuration: Configuration, manifest: Option[WebpackManifestType]): Option[WebpackManifestType] = {
+  def mapServerPath(
+                     configuration: Configuration,
+                     manifest: Option[WebpackManifestType]
+                   ): Option[WebpackManifestType] = {
     manifest.map { manifest =>
       val publicPathOption = configuration.getOptional[String]("webpack.publicPath")
       val serverPathOption = configuration.getOptional[String]("webpack.serverPath")
       WebpackManifestContainer((publicPathOption, serverPathOption) match {
         case (Some(publicPath), Some(serverPath)) =>
-          manifest.entries.mapValues { case (entry: WebpackEntry) =>
-            val jsEntries = entry.js.map(path => Paths.get(serverPath, replacePublicPath(path, publicPath)).toString)
-            val cssEntries = entry.css.map(path => Paths.get(serverPath, replacePublicPath(path, publicPath)).toString)
-            WebpackEntry(jsEntries, cssEntries)
+          manifest.entries.mapValues {
+            case Left(entry) =>
+              val jsEntries = entry.js.map(path =>
+                Paths.get(serverPath, replacePublicPath(path, publicPath)).toString)
+              val cssEntries = entry.css.map(path =>
+                Paths.get(serverPath, replacePublicPath(path, publicPath)).toString)
+              Left(WebpackEntry(jsEntries, cssEntries))
+            case Right(entry) => Right(Paths.get(serverPath, replacePublicPath(entry, publicPath)).toString)
           }
-        case _ => Map.empty[String, WebpackEntry]
+        case _ => Map.empty[String, Either[WebpackEntry, String]]
       })
     }
   }
@@ -130,6 +142,14 @@ class WebpackModule extends Module {
       val actualUrl = new URL(filePath)
       Paths.get(actualUrl.getPath)
     }.getOrElse(Paths.get(filePath))
-    Paths.get(publicPath).relativize(actualPath).toString
+    Try {
+      Paths.get(publicPath).relativize(actualPath).toString
+    } match {
+      case Success(path) => path
+      case Failure(ex) =>
+        throw new IllegalArgumentException(
+          "Could not convert path's, are you using relative paths in your manifest?", ex
+        )
+    }
   }
 }
