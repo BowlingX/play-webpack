@@ -10,7 +10,7 @@ lazy val `play-webpack` = project.in(file("src") / "play-module").disablePlugins
     .settings(playModuleSettings ++ publishSettings)
 
 lazy val lib = Project("play-webpack-lib", file("src") / "lib").disablePlugins(ScriptedPlugin)
-    .settings(sharedSettings ++ publishSettings:_*)
+    .settings(sharedSettings ++ publishSettings ++ librarySettings:_*)
 
 lazy val sbtPlugin = Project("play-webpack-plugin", file("src") / "sbt-plugin")
   .settings(publishSettings ++ pluginSettings:_*).dependsOn(lib)

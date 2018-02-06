@@ -55,6 +55,11 @@ object PlayWebpackBuild {
     )
   }
 
+  def librarySettings: Seq[Setting[_]] = Seq(
+    scalaVersion := scala212Version,
+    crossScalaVersions := Seq(scala212Version, scala211Version)
+  )
+
   def playModuleSettings: Seq[Setting[_]] = {
     mainSettings ++ Seq(
       scalaVersion := scala212Version,
