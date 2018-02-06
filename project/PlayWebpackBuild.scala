@@ -30,7 +30,12 @@ object PlayWebpackBuild {
         "-deprecation",
         "-unchecked",
         "-encoding", "UTF-8"
-      )
+      ),
+        crossSbtVersions := Seq("0.13.16", "1.1.0"),
+        scalaVersion in ThisBuild := {
+          if((sbtBinaryVersion in pluginCrossBuild).value.startsWith("0.")) scala210Version else scala212Version
+        }
+
     )
   }
 
@@ -38,9 +43,7 @@ object PlayWebpackBuild {
     sharedSettings ++ (
       libraryDependencies ++= Seq(
         "io.spray" %% "spray-json" % "1.3.3"
-      )) ++ Seq(
-      crossSbtVersions := Seq("0.13.16", "1.1.0")
-    )
+      ))
   }
 
   def scala210Project: Seq[Setting[_]] = {
@@ -97,8 +100,8 @@ object PlayWebpackBuild {
         checkSnapshotDependencies,
         inquireVersions,
         runClean,
-        releaseStepCommandAndRemaining("^test"),
-        releaseStepCommandAndRemaining("^publishLocal"),
+        releaseStepCommandAndRemaining("+test"),
+        releaseStepCommandAndRemaining("+publishLocal"),
         releaseStepCommandAndRemaining("^play-webpack-plugin/scripted"),
         setReleaseVersion,
         commitReleaseVersion,
