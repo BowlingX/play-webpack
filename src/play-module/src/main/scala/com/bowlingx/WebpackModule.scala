@@ -81,16 +81,19 @@ class WebpackModule extends Module {
   def createVendorResources(
                              environment: Environment,
                              entry: Option[WebpackEntryType],
-                             prepends: Seq[(String, WebpackEntryType)]
+                             prepends: Seq[(String, Either[WebpackEntryType, String])]
                            ): Seq[URL] = {
     // we watch the real source in develop, this is faster instead of waiting till other watch processes copy the file to resources
-    val preSources = prepends.flatMap { case (_, sourceEntry) =>
+    val preSources = prepends.flatMap {
+      case (_, Right(sourceEntry)) => this.getFileFromResourcesOrProjectPath(environment, sourceEntry)
+      case (_, Left(sourceEntry)) =>
       sourceEntry.js.map(
         r => this.getFileFromResourcesOrProjectPath(environment, r))
     }.flatten
-    val entrySource = Seq(entry.flatMap(_.js.flatMap(
-      r => this.getFileFromResourcesOrProjectPath(environment, r)))
-    ).flatten
+    val entrySource = Seq(entry.flatMap {
+      case Left(entry) => entry.js.flatMap(r => this.getFileFromResourcesOrProjectPath(environment, r))
+      case Right(entry) => this.getFileFromResourcesOrProjectPath(environment, entry)
+    }).flatten
 
     preSources ++ entrySource
   }

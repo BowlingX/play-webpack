@@ -6,15 +6,15 @@ trait WebpackEntryType {
 }
 
 trait WebpackManifestType {
-  val entries: Map[String, WebpackEntryType]
+  val entries: Map[String, Either[WebpackEntryType, String]]
 }
 
 case class WebpackEntry(js: Option[String], css: Option[String]) extends WebpackEntryType
 
-class WebpackManifestContainer(val entries: Map[String, WebpackEntryType]) extends WebpackManifestType
+class WebpackManifestContainer(val entries: Map[String, Either[WebpackEntryType, String]]) extends WebpackManifestType
 
 object WebpackManifestContainer {
-  def apply(entries:Map[String, WebpackEntryType]) : WebpackManifestContainer = {
+  def apply(entries:Map[String, Either[WebpackEntryType, String]]) : WebpackManifestContainer = {
     new WebpackManifestContainer(entries)
   }
 }
