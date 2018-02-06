@@ -6,6 +6,7 @@ import sbtrelease.ReleaseStateTransformations._
 import scala.xml.Group
 import play.sbt.PlayImport._
 import com.typesafe.sbt.SbtPgp.autoImportImpl._
+import xerial.sbt.Sonatype.SonatypeKeys._
 
 object PlayWebpackBuild {
 
@@ -38,12 +39,7 @@ object PlayWebpackBuild {
       libraryDependencies ++= Seq(
         "io.spray" %% "spray-json" % "1.3.3"
       )) ++ Seq(
-      crossSbtVersions := Seq("0.13.16", "1.1.0"),
-      scalaVersion := (CrossVersion partialVersion (sbtVersion in pluginCrossBuild).value match {
-        case Some((0, 13)) => scala210Version
-        case Some((1, _))  => scala212Version
-        case _             => sys error s"Unhandled sbt version ${(sbtVersion in pluginCrossBuild).value}"
-      })
+      crossSbtVersions := Seq("0.13.16", "1.1.0")
     )
   }
 
@@ -101,13 +97,13 @@ object PlayWebpackBuild {
         checkSnapshotDependencies,
         inquireVersions,
         runClean,
-        releaseStepCommandAndRemaining("+test"),
-        releaseStepCommandAndRemaining("+publishLocal"),
-        releaseStepCommandAndRemaining("+play-webpack-plugin/scripted"),
+        releaseStepCommandAndRemaining("^test"),
+        releaseStepCommandAndRemaining("^publishLocal"),
+        releaseStepCommandAndRemaining("^play-webpack-plugin/scripted"),
         setReleaseVersion,
         commitReleaseVersion,
         tagRelease,
-        releaseStepCommandAndRemaining("+publishSigned"),
+        releaseStepCommandAndRemaining("^publishSigned"),
         setNextVersion,
         commitNextVersion,
         releaseStepCommandAndRemaining("sonatypeReleaseAll"),
@@ -128,6 +124,7 @@ object PlayWebpackBuild {
   def publishSettings: Seq[Setting[_]] = {
     Seq(
       pgpPassphrase := envPassphrase,
+      publishTo := sonatypePublishTo.value,
       publishMavenStyle := true,
       publishArtifact in Test := false,
       packageOptions += {
