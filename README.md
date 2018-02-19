@@ -112,7 +112,7 @@ You can supply multiple files that will then be merged.
 
 In case you need to prefix the assets, you can do that with (defaults to `None`):
 
-    assetPrefix := Some("/prefix/")
+    webpackAssetPrefix := Some("/prefix/")
 
 # Server-Side Rendering with Nashorn
 
