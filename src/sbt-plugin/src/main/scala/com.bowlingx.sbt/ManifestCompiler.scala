@@ -28,7 +28,7 @@ private[sbt] case class ManifestCompiler(jsonFile:Seq[File], prefix:Option[Strin
        |  val entries:Map[String, Either[WebpackEntry, String]] = Map(
        |  ${manifest.map { case (bundle:String, _) =>
             s"""
-               |${"\"" + bundle + "\""} -> `${formatEntry(bundle)}`
+               |${"\"" + bundle + "\""} -> `$bundle`
              """.stripMargin
           }.mkString(",")}
        |)
@@ -37,8 +37,8 @@ private[sbt] case class ManifestCompiler(jsonFile:Seq[File], prefix:Option[Strin
                 s"""
                    |
                    |lazy val `$bundle` = Left(WebpackEntry(
-                   |${entry.js.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")},
-                   |${entry.css.map(e => s"Some(${"\"" + e + "\""})").getOrElse("None")}
+                   |${entry.js.map(e => s"Some(${"\"" + formatEntry(e) + "\""})").getOrElse("None")},
+                   |${entry.css.map(e => s"Some(${"\"" + formatEntry(e) + "\""})").getOrElse("None")}
                    |))
                    |
                    |""".stripMargin
