@@ -8,12 +8,13 @@ case class WebpackEntry(js: Option[String], css: Option[String])
 object WebpackEntryProtocol extends DefaultJsonProtocol {
   implicit val entryFormat = jsonFormat2(WebpackEntry)
 }
-/**
-  * Created by david on 16.01.17.
-  */
-private[sbt] case class ManifestCompiler(jsonFile:Seq[File]) {
+
+private[sbt] case class ManifestCompiler(jsonFile:Seq[File], prefix:Option[String]) {
 
   private[this] val files = jsonFile.map(IO.read(_).parseJson)
+
+  private def formatEntry(entry:String) = prefix.map(_ + entry).getOrElse(entry)
+
   def generate(): String = {
     import WebpackEntryProtocol._
 
@@ -27,7 +28,7 @@ private[sbt] case class ManifestCompiler(jsonFile:Seq[File]) {
        |  val entries:Map[String, Either[WebpackEntry, String]] = Map(
        |  ${manifest.map { case (bundle:String, _) =>
             s"""
-               |${"\"" + bundle + "\""} -> `$bundle`
+               |${"\"" + bundle + "\""} -> `${formatEntry(bundle)}`
              """.stripMargin
           }.mkString(",")}
        |)
@@ -44,7 +45,7 @@ private[sbt] case class ManifestCompiler(jsonFile:Seq[File]) {
 
             case (bundle:String, Right(entry)) =>
               s"""
-                 |lazy val `$bundle` = Right("$entry")
+                 |lazy val `$bundle` = Right("${formatEntry(entry)}")
                """.stripMargin
           }.mkString("\n")}
        |}

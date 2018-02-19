@@ -21,15 +21,18 @@ Example Project: https://github.com/BowlingX/play-webpack-example
 
 Create a file in ~/project/play-webpack.sbt
 
-    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.14")
+    addSbtPlugin("com.bowlingx" %% "play-webpack-plugin" % "0.1.18")
     
 Add the following dependencies:
     
-    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.14"
+    libraryDependencies += "com.bowlingx" %% "play-webpack" % "0.1.18"
 
 The plugin will convert a webpack JSON manifest file (generated with https://github.com/kossnocorp/assets-webpack-plugin) to a scala object 
 that can be used directly in play templates for example. The plugin is theoretically not limited to play. 
 I will extend the project to support other frameworks in the future.
+
+Since version 0.17.0 the plugin supports a plain json format (like `https://github.com/webdeveric/webpack-assets-manifest`).
+
 
 To make the assets available in your template file:
 
@@ -68,7 +71,7 @@ Sample twirl Template:
         </head>
         <body>
             @content
-            @Seq(WebpackManifest.manifest.js, WebpackManifest.vendor.js, WebpackManifest.main.js).flatten.map { file =>
+            @Seq(WebpackManifest.manifest.left.js, WebpackManifest.vendor.left.js, WebpackManifest.main.left.js).flatten.map { file =>
                 <script src="@file" type="text/javascript"></script>
             }
         </body>
@@ -103,7 +106,13 @@ The plugin defines the following configuration (your `application.conf`):
     
 The default path of the manifest file (relative to project root) (in your `build.sbt`)
     
-    webpackManifest := Option(file("conf/webpack-assets.json"))
+    webpackManifest := file("conf/webpack-assets.json").some.filter(_.exists).toSeq
+
+You can supply multiple files that will then be merged.
+
+In case you need to prefix the assets, you can do that with (defaults to `None`):
+
+    assetPrefix := Some("/prefix/")
 
 # Server-Side Rendering with Nashorn
 
