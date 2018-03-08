@@ -32,4 +32,4 @@ deployment:
   hub:
     branch: master
     commands:
-      - cat /dev/null | sbt ";deletePublishedSnapshots ;+publishSigned"
+      - cat /dev/null | sbt ";+publishSigned"
